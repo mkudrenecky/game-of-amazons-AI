@@ -29,7 +29,8 @@ public class COSC322Test extends GamePlayer{
      * @param args for name and passwd (current, any string would work)
      */
     public static void main(String[] args) {				 
-    	COSC322Test player = new COSC322Test(args[0], args[1]);
+    	//COSC322Test player = new COSC322Test(args[0], args[1]);
+		COSC322Test player = new COSC322Test("mac","f");
     	
     	if(player.getGameGUI() == null) {
     		player.Go();
@@ -66,6 +67,24 @@ public class COSC322Test extends GamePlayer{
     			+ "I am called because the server indicated that the login is successfully");
     	System.out.println("The next step is to find a room and join it: "
     			+ "the gameClient instance created in my constructor knows how!"); 
+
+		System.out.println("List of rooms:");
+		List<Room> rooms = gameClient.getRoomList();
+		int count=0;
+		for (Room room : rooms){
+			System.out.println(room.getName());
+			count++;
+		}
+
+		// join room (hardcoded for now)
+        if (!rooms.isEmpty()) {
+			System.out.println("Enter a room number from 0-"+count);
+            gameClient.joinRoom(rooms.get(1).getName());
+			
+			// use command line to choose a room
+			//gameClient.joinRoom(rooms.get(args[0])).getName());
+			
+        }
     }
 
     @Override
@@ -75,6 +94,10 @@ public class COSC322Test extends GamePlayer{
 	
     	//For a detailed description of the message types and format, 
     	//see the method GamePlayer.handleGameMessage() in the game-client-api document. 
+
+		 // Print out the message details
+		 System.out.println("Message Type: " + messageType);
+		 System.out.println("Message Details: " + msgDetails);
     	    	
     	return true;   	
     }
