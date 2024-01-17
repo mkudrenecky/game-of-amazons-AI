@@ -29,7 +29,7 @@ public class COSC322Test extends GamePlayer{
      * @param args for name and passwd (current, any string would work)
      */
     public static void main(String[] args) {				 
-    	COSC322Test player = new COSC322Test(args[0], args[1]);
+    	COSC322Test player = new COSC322Test("dummyName", "dummyPasswd");
     	
     	if(player.getGameGUI() == null) {
     		player.Go();
@@ -62,23 +62,34 @@ public class COSC322Test extends GamePlayer{
 
     @Override
     public void onLogin() {
-    	System.out.println("Congratualations!!! "
-    			+ "I am called because the server indicated that the login is successfully");
-    	System.out.println("The next step is to find a room and join it: "
-    			+ "the gameClient instance created in my constructor knows how!"); 
+        System.out.println("Congratulations!!! "
+                + "I am called because the server indicated that the login is successfully");
+        System.out.println("The next step is to find a room and join it: "
+                + "the gameClient instance created in my constructor knows how!"); 
+        
+        // Get the list of rooms from the server
+        List<Room> rooms = gameClient.getRoomList();
+        System.out.println("Available Rooms:");
+        //iterate and print rooms in list
+        for (Room room : rooms) {
+            System.out.println(room.getName());
+        }
+
+        // Join the first room in the list (example) if room is empty
+        if (!rooms.isEmpty()) {
+            gameClient.joinRoom(rooms.get(0).getName());
+        }
     }
 
     @Override
     public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
-    	//This method will be called by the GameClient when it receives a game-related message
-    	//from the server.
-	
-    	//For a detailed description of the message types and format, 
-    	//see the method GamePlayer.handleGameMessage() in the game-client-api document. 
-    	    	
-    	return true;   	
+        // Print out the message details
+        System.out.println("Message Type: " + messageType);
+        System.out.println("Message Details: " + msgDetails);
+
+        return true;   	
     }
-    
+
     
     @Override
     public String userName() {
