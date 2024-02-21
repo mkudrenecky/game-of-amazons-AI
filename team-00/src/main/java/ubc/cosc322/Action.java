@@ -1,28 +1,20 @@
 package ubc.cosc322;
 
 public class Action {
-    private int startX, startY, endX, endY;
+    private QueenMove queenMove;
+    private ArrowShot arrowShot;
 
-    public Action(int startX, int startY, int endX, int endY){
-        this.startX = startX;
-        this.startY = startY;
-        this.endX = endX;
-        this.endY = endY;
+    public Action(QueenMove queenMove, ArrowShot arrowShot) {
+        this.queenMove = queenMove;
+        this.arrowShot = arrowShot;
     }
 
-    public int getStartX() {
-        return startX;
+    public QueenMove getQueenMove() {
+        return queenMove;
     }
 
-    public int getStartY() {
-        return startY;
+    public ArrowShot getArrowShot() {
+        return arrowShot;
     }
 
-    public int getEndX() {
-        return endX;
-    }
-
-    public int getEndY() {
-        return endY;
-    }
 }
