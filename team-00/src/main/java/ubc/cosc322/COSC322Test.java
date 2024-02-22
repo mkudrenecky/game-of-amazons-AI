@@ -1,13 +1,18 @@
 
 package ubc.cosc322;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.plaf.nimbus.State;
 
 import sfs2x.client.entities.Room;
 import ygraph.ai.smartfox.games.BaseGameGUI;
 import ygraph.ai.smartfox.games.GameClient;
+import ygraph.ai.smartfox.games.GameMessage;
 import ygraph.ai.smartfox.games.GamePlayer;
+import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
 
 /**
  * An example illustrating how to implement a GamePlayer
@@ -29,7 +34,8 @@ public class COSC322Test extends GamePlayer{
      * @param args for name and passwd (current, any string would work)
      */
     public static void main(String[] args) {				 
-    	COSC322Test player = new COSC322Test(args[0], args[1]);
+    	//COSC322Test player = new COSC322Test(args[0], args[1]);
+		COSC322Test player = new COSC322Test("mac","f");
     	
     	if(player.getGameGUI() == null) {
     		player.Go();
@@ -55,18 +61,19 @@ public class COSC322Test extends GamePlayer{
     	
     	//To make a GUI-based player, create an instance of BaseGameGUI
     	//and implement the method getGameGUI() accordingly
-    	//this.gamegui = new BaseGameGUI(this);
+    	this.gamegui = new BaseGameGUI(this);
     }
  
 
 
     @Override
     public void onLogin() {
-    	System.out.println("Congratualations!!! "
-    			+ "I am called because the server indicated that the login is successfully");
-    	System.out.println("The next step is to find a room and join it: "
-    			+ "the gameClient instance created in my constructor knows how!"); 
-    }
+    	
+		userName = gameClient.getUserName();
+		if(gamegui != null) {
+			gamegui.setRoomInformation(gameClient.getRoomList());
+    	}
+	}
 
     @Override
     public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
@@ -75,8 +82,19 @@ public class COSC322Test extends GamePlayer{
 	
     	//For a detailed description of the message types and format, 
     	//see the method GamePlayer.handleGameMessage() in the game-client-api document. 
+
+		 // Print out the message details
+		 System.out.println("Message Type: " + messageType);
+		 System.out.println("Message Details: " + msgDetails);
+
+		if(messageType.equals(GameMessage.GAME_STATE_BOARD)){
+			getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
+		}
+		else if(messageType.equals(GameMessage.GAME_ACTION_MOVE)){
+			getGameGUI().updateGameState(msgDetails);
+		}
     	    	
-    	return true;   	
+    	return true;   		
     }
     
     
@@ -94,7 +112,7 @@ public class COSC322Test extends GamePlayer{
 	@Override
 	public BaseGameGUI getGameGUI() {
 		// TODO Auto-generated method stub
-		return  null;
+		return  this.gamegui;
 	}
 
 	@Override
