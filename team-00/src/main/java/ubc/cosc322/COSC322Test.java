@@ -27,6 +27,9 @@ public class COSC322Test extends GamePlayer{
 	
     private String userName = null;
     private String passwd = null;
+	private Board board;
+	private int player;
+	private Action action;
  
 	
     /**
@@ -84,17 +87,39 @@ public class COSC322Test extends GamePlayer{
     	//see the method GamePlayer.handleGameMessage() in the game-client-api document. 
 
 		 // Print out the message details
-		 System.out.println("Message Type: " + messageType);
-		 System.out.println("Message Details: " + msgDetails);
+		//  System.out.println("Message Type: " + messageType);
+		//  System.out.println("Message Details: " + msgDetails);
 
-		if(messageType.equals(GameMessage.GAME_STATE_BOARD)){
-			getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
-		}
-		else if(messageType.equals(GameMessage.GAME_ACTION_MOVE)){
-			getGameGUI().updateGameState(msgDetails);
-		}
+		// if(messageType.equals(GameMessage.GAME_STATE_BOARD)){
+		// 	getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
+		// }
+		// else if(messageType.equals(GameMessage.GAME_ACTION_MOVE)){
+		// 	getGameGUI().updateGameState(msgDetails);
+		// }
     	    	
-    	return true;   		
+    	// return true; 
+		
+		switch (messageType) {
+            case GameMessage.GAME_ACTION_START:
+                // If we are black, we move first
+                boolean isBlack = msgDetails.get(AmazonsGameMessage.PLAYER_BLACK).equals(getGameClient().getUserName());
+                player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
+                if (isBlack)
+                    System.out.print("Hello Black");
+                break;
+            case GameMessage.GAME_STATE_BOARD:
+                getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
+                board = new Board((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
+                System.out.println(board.boardToString());
+                break;
+            case GameMessage.GAME_ACTION_MOVE:
+                getGameGUI().updateGameState(msgDetails);
+                break;
+            default:
+                assert (false);
+        }
+        return true;
+
     }
     
     

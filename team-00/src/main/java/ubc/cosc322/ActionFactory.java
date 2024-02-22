@@ -5,12 +5,12 @@ import java.util.List;
 public class ActionFactory {
 
 
-    public ArrayList<Action> getActions(Board board, Player player){
+    public ArrayList<Action> getActions(Board board, int player){
         ArrayList<Action> actions = new ArrayList<>();
 
         for (int i = 0; i < board.getBoardSize(); i++){
             for (int j = 0; j < board.getBoardSize(); j++){
-                if (board.getQueenAt(i,j) != null && board.getQueenAt(i, j).getPlayer() == player){
+                if (board.getPieceAt(i,j) != 0 && board.getPieceAt(i, j) == player){
                     List<QueenMove> queenMoves = generateQueenMoves(board, i, j);
                     for (QueenMove queenMove : queenMoves){
                         List<ArrowShot> arrowMoves = generateArrowMoves(board, queenMove.getEndX(), queenMove.getEndY());
@@ -105,7 +105,7 @@ public class ActionFactory {
     }
 
     private boolean addQueenMoveIfValid(int startX, int startY, int endX, int endY, Board board, List<QueenMove> queenMoves){
-        if (board.getQueenAt(endX, endY) == null && board.getArrowAt(endX, endY) == null){
+        if (board.getPieceAt(endX, endY) == 0){
             queenMoves.add(new QueenMove(startX, startY, endX, endY));
             return true;
         }
@@ -113,7 +113,7 @@ public class ActionFactory {
     }
 
     private boolean addArrowMoveIfValid(int startX, int startY, int endX, int endY, Board board, List<ArrowShot> arrowMoves){
-        if (board.getQueenAt(endX, endY) == null && board.getArrowAt(endX, endY) == null){
+        if (board.getPieceAt(endX, endY) == 0){
             arrowMoves.add(new ArrowShot(startX, startY, endX, endY));
             return true;
         }

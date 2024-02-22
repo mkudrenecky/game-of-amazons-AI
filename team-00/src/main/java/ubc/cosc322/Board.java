@@ -6,25 +6,33 @@ import java.util.ArrayList;
  */
 public class Board {
 
-    private final int BOARD_SIZE = 10;
-    private final int WHITE_QUEEN = 2;
-    private final int BLACK_QUEEN = 1;
-    private final int ARROW = 3;
+    public static final int BOARD_SIZE = 10;
+    public static final int WHITE_QUEEN = 2;
+    public static final int BLACK_QUEEN = 1;
+    public static final int ARROW = 3;
+
+    public int[][] board;
 
     public Board(ArrayList<Integer> gameState){
-        int [][] board = new int [BOARD_SIZE][BOARD_SIZE];
+        this.board =  new int[BOARD_SIZE][BOARD_SIZE];
+        int index=0;
         for (int i = 0; i < BOARD_SIZE; i++){
             for (int j = 0; j < BOARD_SIZE; j++){
-                int index = j * BOARD_SIZE + i;
-                if (gameState.get(index) == WHITE_QUEEN){
-
-                }
+                int value = gameState.get(index++);
+                board[i][j] = value;
             }
         }
 
     }
 
-    public void updateBoardState(Map<String, Object> state){
+    public void updateBoardState(ArrayList<Integer> gameState){
+        int index = 0;
+        for (int i = 0; i < BOARD_SIZE; i++){
+            for (int j = 0; j < BOARD_SIZE; j++){
+                int value = gameState.get(index++);
+                board[i][j] = value;
+            }
+        }
 
     }
 
@@ -32,13 +40,19 @@ public class Board {
         return BOARD_SIZE;
     }
 
-    public Queen getQueenAt(int i, int j){
-        return queens[i][j];
+    public int getPieceAt(int i, int j) {
+        return board[i][j];
     }
 
-    public Arrow getArrowAt(int i, int j){
-        return arrows[i][j];
+    public String boardToString(){
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                sb.append(board[i][j]).append(", ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
-
     
 }
