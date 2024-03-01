@@ -2,7 +2,7 @@ package ubc.cosc322;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActionFactory {
+public class ActionFactory extends BaseActionFactory<Board>{
 
 
     public ArrayList<Action> getActions(Board board, int player){

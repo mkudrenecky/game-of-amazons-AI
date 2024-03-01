@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /*
  * The Board Class holds the state 
  */
-public class Board {
+public class Board extends State {
 
     public static final int BOARD_SIZE = 10;
     public static final int WHITE_QUEEN = 2;
