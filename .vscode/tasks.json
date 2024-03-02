@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "verify",
+      "type": "shell",
+      "command": "mvn",
+      "args": ["-B", "verify"],
+      "group": "build"
+    },
+    {
+      "label": "test",
+      "type": "shell",
+      "command": "mvn",
+      "args": ["-B", "test"],
+      "group": "test"
+    },
+    {
+      "label": "run",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "ubc.cosc322.COSC322Test",
+      "projectName": "COSC322-AI-Project",
+      "args": ["your_username", "your_password"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    }
+  ]
+}
