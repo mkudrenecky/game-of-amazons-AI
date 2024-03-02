@@ -1,28 +1,28 @@
 package ubc.cosc322;
 
 public class QueenMove {
-    private int startX, startY, endX, endY;
+    private int startRow, startCol, endRow, endCol;
 
-    public QueenMove(int startX, int startY, int endX, int endY){
-        this.startX = startX;
-        this.startY = startY;
-        this.endX = endX;
-        this.endY = endY;
+    public QueenMove(int startRow, int startCol, int endRow, int endCol){
+        this.startRow = startRow;
+        this.startCol = startCol;
+        this.endRow = endRow;
+        this.endCol = endCol;
     }
 
-    public int getStartX() {
-        return startX;
+    public int getStartRow() {
+        return startRow;
     }
 
-    public int getStartY() {
-        return startY;
+    public int getStartCol() {
+        return startCol;
     }
 
-    public int getEndX() {
-        return endX;
+    public int getEndRow() {
+        return endRow;
     }
 
-    public int getEndY() {
-        return endY;
+    public int getEndCol() {
+        return endCol;
     }
 }

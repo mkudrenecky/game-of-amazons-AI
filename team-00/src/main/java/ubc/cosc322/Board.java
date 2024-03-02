@@ -15,12 +15,13 @@ public class Board {
 
     public Board(ArrayList<Integer> gameState){
         this.board =  new int[BOARD_SIZE][BOARD_SIZE];
-        int index=0;
+        int index=12;
         for (int i = 0; i < BOARD_SIZE; i++){
             for (int j = 0; j < BOARD_SIZE; j++){
                 int value = gameState.get(index++);
                 board[i][j] = value;
             }
+            index++;
         }
 
     }
@@ -48,7 +49,7 @@ public class Board {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
-                sb.append(board[i][j]).append(", ");
+                sb.append(board[i][j]).append(" ");
             }
             sb.append("\n");
         }
