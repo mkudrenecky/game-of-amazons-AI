@@ -33,7 +33,7 @@ public class COSC322Test extends GamePlayer{
 	private int player;
 	private Action action;
 	// private ActionFactory actionFactory;
-	private boolean isBlack = true;
+	private boolean isBlack;
  
 	
     /**
@@ -41,9 +41,10 @@ public class COSC322Test extends GamePlayer{
      * @param args for name and passwd (current, any string would work)
      */
     public static void main(String[] args) {
-		GamePlayer player;				 
+		GamePlayer player;			 
     	//COSC322Test player = new COSC322Test(args[0], args[1]);
 		player = new COSC322Test("mac","f");
+		player.connect();
 		//player = new HumanPlayer();
     	
     	if(player.getGameGUI() == null) {
@@ -108,30 +109,24 @@ public class COSC322Test extends GamePlayer{
 		switch (messageType) {
             case GameMessage.GAME_ACTION_START:
 				System.out.print("Lets go");
-				//makeRandomMove();
                 //If we are black, we move first
-                isBlack = msgDetails.get(AmazonsGameMessage.PLAYER_BLACK).equals(getGameClient().getUserName());
-                player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
+                isBlack = msgDetails.get(AmazonsGameMessage.PLAYER_BLACK).equals(getGameClient().getUserName());;
                 if (isBlack)
                     System.out.print("Hello Black");
 					makeRandomMove();
-					
-					System.out.println(board.boardToString());
                 break;
             case GameMessage.GAME_STATE_BOARD:
-			System.out.println("Message Details: " + msgDetails);
+				System.out.println("Message Details: " + msgDetails);
                 getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
                 board = new Board((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
                 System.out.println(board.boardToString());
-				//isBlack = msgDetails.get(AmazonsGameMessage.PLAYER_BLACK).equals(getGameClient().getUserName());
-                player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
-                if (isBlack)
-                    System.out.print("Hello Black");
-					makeRandomMove();
-					System.out.println(board.boardToString());
                 break;
             case GameMessage.GAME_ACTION_MOVE:
                 getGameGUI().updateGameState(msgDetails);
+				// take in opponent Action and update our board
+				Action opAction = new Action(msgDetails);
+				System.out.println("Opponent move: " + opAction);
+				board.updateBoardState(opAction, board);
 				makeRandomMove();
 				System.out.println(board.boardToString());
                 break;

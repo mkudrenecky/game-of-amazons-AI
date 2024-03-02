@@ -1,7 +1,7 @@
 package ubc.cosc322;
 
 public class QueenMove {
-    private int startRow, startCol, endRow, endCol;
+    public int startRow, startCol, endRow, endCol;
 
     public QueenMove(int startRow, int startCol, int endRow, int endCol){
         this.startRow = startRow;

@@ -1,7 +1,7 @@
 package ubc.cosc322;
 
 public class ArrowShot {
-    private int startRow, startCol, endRow, endCol;
+    public int startRow, startCol, endRow, endCol;
 
     public ArrowShot(int startRow, int startCol, int endRow, int endCol){
         this.startRow = startRow;

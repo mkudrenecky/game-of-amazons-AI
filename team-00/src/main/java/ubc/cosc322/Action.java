@@ -17,6 +17,20 @@ public class Action {
         this.arrowShot = arrowShot;
     }
 
+    public Action(Map<String, Object> action){
+    
+        ArrayList<Integer> startQueenPos = (ArrayList<Integer>) ((ArrayList<Integer>) action.get(AmazonsGameMessage.QUEEN_POS_CURR)).clone();
+        ArrayList<Integer> newQueenPos = (ArrayList<Integer>) ((ArrayList<Integer>) action.get(AmazonsGameMessage.QUEEN_POS_NEXT)).clone();
+        ArrayList<Integer> arrowPosition = (ArrayList<Integer>) ((ArrayList<Integer>) action.get(AmazonsGameMessage.ARROW_POS)).clone();
+
+        queenMove.startRow = startQueenPos.get(0) - 1;
+        queenMove.startCol = startQueenPos.get(1) - 1;
+        queenMove.endRow = newQueenPos.get(0) - 1;
+        queenMove.endCol = newQueenPos.get(1) - 1;
+        arrowShot.endRow = arrowPosition.get(0) - 1;
+        arrowShot.endCol = arrowPosition.get(1) - 1;
+    }
+
     public QueenMove getQueenMove() {
         return queenMove;
     }
