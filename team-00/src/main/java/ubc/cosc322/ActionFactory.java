@@ -13,15 +13,11 @@ public class ActionFactory {
         for (int i = 0; i < board.getBoardSize(); i++){
             for (int j = 0; j < board.getBoardSize(); j++){
                 if (board.getPieceAt(i,j) != 0 && board.getPieceAt(i, j) == player){
-                    System.out.println("WE MADE IT HERE");
-                    System.out.println("row: " + i + ", col: " + j);
                     List<QueenMove> queenMoves = generateQueenMoves(board, i, j);
                     for (QueenMove queenMove : queenMoves){
-                        System.out.println("WE HAVE QUEEN MOVES");
                         List<ArrowShot> arrowMoves = generateArrowMoves(board, queenMove.getEndRow(), queenMove.getEndCol());
                         for (ArrowShot arrowShot : arrowMoves){
                             actions.add(new Action(queenMove, arrowShot));
-                            System.out.println("NEW ACTION!");
                         }
                     
                     }
@@ -131,7 +127,6 @@ public class ActionFactory {
     private static boolean addQueenMoveIfValid(int startRow, int startCol, int endRow, int endCol, Board board, List<QueenMove> queenMoves){
         if (board.getPieceAt(endRow, endCol) == 0){
             queenMoves.add(new QueenMove(startRow, startCol, endRow, endCol));
-            System.out.println("ADDING QUEEN MOVE!");
             return true;
         }
         return false;

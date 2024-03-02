@@ -26,14 +26,21 @@ public class Board {
 
     }
 
-    public void updateBoardState(ArrayList<Integer> gameState){
-        int index = 0;
-        for (int i = 0; i < BOARD_SIZE; i++){
-            for (int j = 0; j < BOARD_SIZE; j++){
-                int value = gameState.get(index++);
-                board[i][j] = value;
-            }
-        }
+    public void updateBoardState(Action action, Board board){
+        QueenMove move = action.getQueenMove();
+        ArrowShot arrow = action.getArrowShot();
+
+        // get the color/player that made the move
+        int player = board.getPieceAt(move.getStartRow(),move.getStartCol());
+        System.out.println("PLayer moving: " + player);
+        
+        // update board to 0 where queen was and move queen
+        board.setPieceAt(move.getStartRow(), move.getStartCol(), 0);
+        board.setPieceAt(move.getEndRow(), move.getEndCol(), player);
+      
+
+        // update arrow on board
+        board.setPieceAt(arrow.getEndRow(), arrow.getEndCol(), ARROW);
 
     }
 
@@ -43,6 +50,10 @@ public class Board {
 
     public int getPieceAt(int i, int j) {
         return board[i][j];
+    }
+
+    public void setPieceAt(int i, int j, int value) {
+        board[i][j] = value;
     }
 
     public String boardToString(){

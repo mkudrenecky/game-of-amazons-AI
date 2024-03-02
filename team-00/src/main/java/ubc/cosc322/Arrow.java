@@ -8,11 +8,11 @@ public class Arrow {
         this.col = col;
     }
 
-    public int getrow() {
+    public int getRow() {
         return row;
     }
 
-    public int getcol() {
+    public int getCol() {
         return col;
     }
 }

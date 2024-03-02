@@ -115,7 +115,7 @@ public class COSC322Test extends GamePlayer{
                 if (isBlack)
                     System.out.print("Hello Black");
 					makeRandomMove();
-					board.updateBoardState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
+					
 					System.out.println(board.boardToString());
                 break;
             case GameMessage.GAME_STATE_BOARD:
@@ -128,13 +128,11 @@ public class COSC322Test extends GamePlayer{
                 if (isBlack)
                     System.out.print("Hello Black");
 					makeRandomMove();
-					board.updateBoardState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
 					System.out.println(board.boardToString());
                 break;
             case GameMessage.GAME_ACTION_MOVE:
                 getGameGUI().updateGameState(msgDetails);
 				makeRandomMove();
-				board.updateBoardState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
 				System.out.println(board.boardToString());
                 break;
             default:
@@ -151,10 +149,12 @@ public class COSC322Test extends GamePlayer{
 
 		System.out.println("WE made the actions");
 		Action move = actions.get((int) (Math.random() * actions.size()));
-
+		
 		System.out.println("About to send move");
 		getGameClient().sendMoveMessage(move.toServerResponse());
         getGameGUI().updateGameState(move.toServerResponse());
+
+		board.updateBoardState(move, board);
 		
 	}
     
