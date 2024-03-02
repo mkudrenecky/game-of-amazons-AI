@@ -58,12 +58,33 @@ public class ActionFactory {
         }
 
         // move up-right
+        for (int i = 1; startRow + i < board.getBoardSize() && startCol + i < board.getBoardSize(); i++) {
+            if (!addQueenMoveIfValid(startRow, startCol, startRow + i, startCol + i, board, queenMoves)) {
+                break;
+            }
+        }
 
         // move up-left
-
-        // move down-left
+        for (int i = 1; startRow + i < board.getBoardSize() && startCol - i >= 0; i++) {
+            if (!addQueenMoveIfValid(startRow, startCol, startRow + i, startCol - i, board, queenMoves)) {
+                break;
+            }
+        }
 
         // move down-right
+        for (int i = 1; startRow - i >= 0 && startCol + i < board.getBoardSize(); i++) {
+            if (!addQueenMoveIfValid(startRow, startCol, startRow - i, startCol + i, board, queenMoves)) {
+                break;
+            }
+        }
+
+        // move down-left
+        for (int i = 1; startRow - i >= 0 && startCol - i >= 0; i++) {
+            if (!addQueenMoveIfValid(startRow, startCol, startRow - i, startCol - i, board, queenMoves)) {
+                break;
+            }
+        }
+
         return queenMoves;
     }
 
@@ -100,12 +121,33 @@ public class ActionFactory {
         }
 
         // shoot up-right
+        for (int i = 1; startRow + i < board.getBoardSize() && startCol + i < board.getBoardSize(); i++) {
+            if (!addArrowMoveIfValid(startRow, startCol, startRow + i, startCol + i, board, arrowMoves)) {
+                break;
+            }
+        }
 
         // shoot up-left
+        for (int i = 1; startRow + i < board.getBoardSize() && startCol - i >= 0; i++) {
+            if (!addArrowMoveIfValid(startRow, startCol, startRow + i, startCol - i, board, arrowMoves)) {
+                break;
+            }
+        }
 
         // shoot down-right
+        for (int i = 1; startRow - i >= 0 && startCol + i < board.getBoardSize(); i++) {
+            if (!addArrowMoveIfValid(startRow, startCol, startRow - i, startCol + i, board, arrowMoves)) {
+                break;
+            }
+        }
 
         // shoot down-left
+        for (int i = 1; startRow - i >= 0 && startCol - i >= 0; i++) {
+            if (!addArrowMoveIfValid(startRow, startCol, startRow - i, startCol - i, board, arrowMoves)) {
+                break;
+            }
+        }
+
         return arrowMoves;
     }
 
@@ -131,3 +173,6 @@ public class ActionFactory {
         return false;
     }
 }
+
+
+

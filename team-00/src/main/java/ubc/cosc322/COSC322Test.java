@@ -42,10 +42,11 @@ public class COSC322Test extends GamePlayer{
      */
     public static void main(String[] args) {
 		GamePlayer player;				 
-    	//COSC322Test player = new COSC322Test("dummyName", "dummyPasswd");
+    	//COSC322Test player = new COSC322Test(args[0], args[1]);
 		player = new COSC322Test("mac","f");
 		//player = new HumanPlayer();
-    	
+		player.connect();
+
     	if(player.getGameGUI() == null) {
     		player.Go();
     	}
