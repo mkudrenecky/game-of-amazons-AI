@@ -26,6 +26,16 @@ public class Board {
 
     }
 
+    public Board(Board newBoard, Action action){
+        this.board = new int[BOARD_SIZE][BOARD_SIZE];
+        newBoard.updateBoardState(action, newBoard);
+        for (int i = 0; i < BOARD_SIZE; i++){
+            for (int j = 0; j < BOARD_SIZE; j++){
+                board[i][j] = newBoard.getPieceAt(i, j);
+            }
+        }
+    }
+
     public void updateBoardState(Action action, Board board){
         QueenMove move = action.getQueenMove();
         ArrowShot arrow = action.getArrowShot();
@@ -65,6 +75,10 @@ public class Board {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    public boolean isGameOver(){
+       return true;
     }
     
 }

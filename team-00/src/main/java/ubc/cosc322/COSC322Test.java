@@ -33,7 +33,7 @@ public class COSC322Test extends GamePlayer{
 	private int player;
 	private Action action;
 	// private ActionFactory actionFactory;
-	private boolean isBlack = true;
+	private boolean isBlack;
  
 	
     /**
@@ -108,13 +108,12 @@ public class COSC322Test extends GamePlayer{
 		switch (messageType) {
             case GameMessage.GAME_ACTION_START:
 				System.out.print("Lets go");
-				//makeRandomMove();
                 //If we are black, we move first
                 isBlack = msgDetails.get(AmazonsGameMessage.PLAYER_BLACK).equals(getGameClient().getUserName());
                 player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
                 if (isBlack)
                     System.out.print("Hello Black");
-					makeRandomMove();
+					makeMinMaxMove();
 					
 					System.out.println(board.boardToString());
                 break;
@@ -127,12 +126,12 @@ public class COSC322Test extends GamePlayer{
                 player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
                 if (isBlack)
                     System.out.print("Hello Black");
-					makeRandomMove();
+					makeMinMaxMove();
 					System.out.println(board.boardToString());
                 break;
             case GameMessage.GAME_ACTION_MOVE:
                 getGameGUI().updateGameState(msgDetails);
-				makeRandomMove();
+				makeMinMaxMove();
 				System.out.println(board.boardToString());
                 break;
             default:
@@ -155,7 +154,19 @@ public class COSC322Test extends GamePlayer{
         getGameGUI().updateGameState(move.toServerResponse());
 
 		board.updateBoardState(move, board);
-		
+	}
+
+	private void makeMinMaxMove(){
+		//MinMax minMax = new MinMax();
+		int depth = 3;
+		int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
+		Action bestAction = MinMax.findBestAction(board, depth, player);
+
+		System.out.println("making move for black? " + isBlack);
+		getGameClient().sendMoveMessage(bestAction.toServerResponse());
+        getGameGUI().updateGameState(bestAction.toServerResponse());
+
+		board.updateBoardState(bestAction, board);
 	}
     
     
