@@ -13,9 +13,8 @@ public class MinMax {
     public static Action findBestAction(Board board, int depth, int player) {
         int alpha = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
-        boolean maximizingPlayer = true;
+        int maximizingPlayer = player;
 
-        // Call the private minMaxSearch method
         MinMax result = minMaxSearch(board, depth, alpha, beta, maximizingPlayer, player);
 
         Action bestAction = result.bestAction;
@@ -23,19 +22,21 @@ public class MinMax {
         return bestAction;
     }
 
-    private static MinMax minMaxSearch(Board board, int depth, int alpha, int beta, boolean maximizingPlayer, int player) {
-        List<Action> legalActions = ActionFactory.getActions(board, player);
+    private static MinMax minMaxSearch(Board board, int depth, int alpha, int beta, int maximizingPlayer, int currentPlayer) {
+        List<Action> legalActions = ActionFactory.getActions(board, currentPlayer);
         if (depth == 0 || legalActions.isEmpty()) {
-            return new MinMax (evaluate(board, player), null);
+            return new MinMax (evaluate(board, maximizingPlayer), null);
         }
 
         Action bestAction = null;
 
-        if (maximizingPlayer) {
+        if (currentPlayer == maximizingPlayer) {
             int maxEval = Integer.MIN_VALUE;
             for (Action action : legalActions) {
                 Board nextBoard = new Board(board, action);
-                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, false, player).evaluation;
+                // System.out.println(nextBoard.boardToString());
+                // System.out.println(board.boardToString());
+                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer)).evaluation;
                 if (eval > maxEval) {
                     maxEval = eval;
                     bestAction = action;
@@ -49,9 +50,10 @@ public class MinMax {
         } else {
             int minEval = Integer.MAX_VALUE;
             for (Action action : legalActions) {
-                board.updateBoardState(action, board);
-                Board nextBoard = board;
-                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, true, player).evaluation;
+                Board nextBoard = new Board(board, action);
+                // System.out.println(nextBoard.boardToString());
+                // System.out.println(board.boardToString());
+                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer)).evaluation;
                 if (eval < minEval) {
                     minEval = eval;
                     bestAction = action;
@@ -66,15 +68,14 @@ public class MinMax {
     }
 
     private static int evaluate(Board board, int player){
-        int opponent;
-        if (player == 1){
-            opponent = 2;
-        }else{
-            opponent = 1;
-        }
-        int mobilityScore = ActionFactory.getActions(board, player).size() - ActionFactory.getActions(board, opponent).size();
-    
+        
+        int mobilityScore = ActionFactory.getActions(board, player).size() - ActionFactory.getActions(board, getOpponent(player)).size();
+        System.out.println("Mobility score for player " + player + ": " + mobilityScore);
         return mobilityScore;
+    }
+
+    private static int getOpponent(int player) {
+        return player == 1 ? 2 : 1;
     }
 }
     /*MINIMAX(s) =

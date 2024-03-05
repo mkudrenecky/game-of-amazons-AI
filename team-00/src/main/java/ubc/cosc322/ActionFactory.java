@@ -6,9 +6,8 @@ public class ActionFactory {
 
 
     public static ArrayList<Action> getActions(Board board, int player){
-        System.out.println("Generating actions.. for: " + player);
+        // System.out.println("Generating actions.. for: " + player);
         ArrayList<Action> actions = new ArrayList<>();
-        System.out.println("BOARD SIZE: " + board.getBoardSize());
 
         for (int i = 0; i < board.getBoardSize(); i++){
             for (int j = 0; j < board.getBoardSize(); j++){

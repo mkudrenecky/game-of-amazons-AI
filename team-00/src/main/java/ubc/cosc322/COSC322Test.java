@@ -33,7 +33,7 @@ public class COSC322Test extends GamePlayer{
 	private int player;
 	private Action action;
 	// private ActionFactory actionFactory;
-	private boolean isBlack;
+	private boolean isBlack =true;
  
 	
     /**
@@ -108,7 +108,7 @@ public class COSC322Test extends GamePlayer{
 		switch (messageType) {
             case GameMessage.GAME_ACTION_START:
 				System.out.print("Lets go");
-                //If we are black, we move first
+                //Black goes first
                 isBlack = msgDetails.get(AmazonsGameMessage.PLAYER_BLACK).equals(getGameClient().getUserName());
                 player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
                 if (isBlack)
@@ -122,7 +122,7 @@ public class COSC322Test extends GamePlayer{
                 getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
                 board = new Board((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
                 System.out.println(board.boardToString());
-				//isBlack = msgDetails.get(AmazonsGameMessage.PLAYER_BLACK).equals(getGameClient().getUserName());
+				// isBlack = msgDetails.get(AmazonsGameMessage.PLAYER_BLACK).equals(getGameClient().getUserName());
                 player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
                 if (isBlack)
                     System.out.print("Hello Black");
@@ -157,12 +157,12 @@ public class COSC322Test extends GamePlayer{
 	}
 
 	private void makeMinMaxMove(){
-		//MinMax minMax = new MinMax();
-		int depth = 3;
+		// will eventually use itertive deepening on a timer, tree will be smaller as game progresses
+		int depth = 2;
 		int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
 		Action bestAction = MinMax.findBestAction(board, depth, player);
 
-		System.out.println("making move for black? " + isBlack);
+		System.out.println("making min max move for black? " + isBlack);
 		getGameClient().sendMoveMessage(bestAction.toServerResponse());
         getGameGUI().updateGameState(bestAction.toServerResponse());
 
