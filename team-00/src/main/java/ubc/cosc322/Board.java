@@ -26,13 +26,33 @@ public class Board {
 
     }
 
+    public Board(Board oldBoard) {
+        this.board = new int[BOARD_SIZE][BOARD_SIZE];
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                this.board[i][j] = oldBoard.getPieceAt(i, j);
+            }
+        }
+    }
+
+    public Board(Board oldBoard, Action action){
+        this.board = new int[BOARD_SIZE][BOARD_SIZE];
+        Board newBoard = new Board(oldBoard);
+        newBoard.updateBoardState(action, newBoard);
+        for (int i = 0; i < BOARD_SIZE; i++){
+            for (int j = 0; j < BOARD_SIZE; j++){
+                board[i][j] = newBoard.getPieceAt(i, j);
+            }
+        }
+    }
+
     public void updateBoardState(Action action, Board board){
         QueenMove move = action.getQueenMove();
         ArrowShot arrow = action.getArrowShot();
 
         // get the color/player that made the move
         int player = board.getPieceAt(move.getStartRow(),move.getStartCol());
-        System.out.println("PLayer moving: " + player);
+        // System.out.println("PLayer moving: " + player);
         
         // update board to 0 where queen was and move queen
         board.setPieceAt(move.getStartRow(), move.getStartCol(), 0);
@@ -65,6 +85,10 @@ public class Board {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    public boolean isGameOver(){
+       return true;
     }
     
 }
