@@ -33,7 +33,7 @@ public class COSC322Test extends GamePlayer{
 	private int player;
 	private Action action;
 	// private ActionFactory actionFactory;
-	private boolean isBlack =true;
+	private boolean isBlack;
  
 	
     /**
@@ -122,12 +122,12 @@ public class COSC322Test extends GamePlayer{
                 getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
                 board = new Board((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
                 System.out.println(board.boardToString());
-				// isBlack = msgDetails.get(AmazonsGameMessage.PLAYER_BLACK).equals(getGameClient().getUserName());
-                player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
-                if (isBlack)
-                    System.out.print("Hello Black");
-					makeMinMaxMove();
-					System.out.println(board.boardToString());
+				// // isBlack = msgDetails.get(AmazonsGameMessage.PLAYER_BLACK).equals(getGameClient().getUserName());
+                // player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
+                // if (isBlack)
+                //     System.out.print("Hello Black");
+				// 	makeMinMaxMove();
+				// 	System.out.println(board.boardToString());
                 break;
             case GameMessage.GAME_ACTION_MOVE:
                 getGameGUI().updateGameState(msgDetails);
