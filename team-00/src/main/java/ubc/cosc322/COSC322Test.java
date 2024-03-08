@@ -43,9 +43,10 @@ public class COSC322Test extends GamePlayer{
     public static void main(String[] args) {
 		GamePlayer player;				 
     	//COSC322Test player = new COSC322Test(args[0], args[1]);
-		player = new COSC322Test("mac","f");
+		player = new COSC322Test("alex","123");
 		//player = new HumanPlayer();
-    	
+		player.connect();
+
     	if(player.getGameGUI() == null) {
     		player.Go();
     	}
@@ -122,11 +123,6 @@ public class COSC322Test extends GamePlayer{
                 getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
                 board = new Board((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
                 System.out.println(board.boardToString());
-				// // isBlack = msgDetails.get(AmazonsGameMessage.PLAYER_BLACK).equals(getGameClient().getUserName());
-                // player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
-                // if (isBlack)
-                //     System.out.print("Hello Black");
-				// 	makeMinMaxMove();
 				// 	System.out.println(board.boardToString());
                 break;
             case GameMessage.GAME_ACTION_MOVE:
