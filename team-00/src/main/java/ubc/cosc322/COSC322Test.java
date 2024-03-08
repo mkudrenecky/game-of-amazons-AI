@@ -124,7 +124,7 @@ public class COSC322Test extends GamePlayer{
                 getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
                 board = new Board((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
                 System.out.println(board.boardToString());
-				makeMinMaxMove();
+				// makeMinMaxMove();
 				// 	System.out.println(board.boardToString());
                 break;
             case GameMessage.GAME_ACTION_MOVE:
