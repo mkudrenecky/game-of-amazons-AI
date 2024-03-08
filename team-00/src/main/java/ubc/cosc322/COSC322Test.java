@@ -77,13 +77,17 @@ public class COSC322Test extends GamePlayer{
 
 
     @Override
-    public void onLogin() {
-    	
-		userName = gameClient.getUserName();
-		if(gamegui != null) {
-			gamegui.setRoomInformation(gameClient.getRoomList());
-    	}
+	public void onLogin() {
+		if (gameClient != null && gameClient.getUserName() != null) {
+			userName = gameClient.getUserName();
+			if (gamegui != null) {
+				gamegui.setRoomInformation(gameClient.getRoomList());
+			}
+		} else {
+			System.err.println("Error: Game client or user is not initialized.");
+		}
 	}
+
 
     @Override
     public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
