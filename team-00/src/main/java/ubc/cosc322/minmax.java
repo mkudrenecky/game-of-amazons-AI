@@ -1,6 +1,6 @@
 package ubc.cosc322;
 
-public class minmax {
+public class MinMax {
     /*MINIMAX(s) =
 UTILITY(s, MAX) if IS-TERMINAL(s)
 maxa∈Actions(s) MINIMAX(RESULT(s, a)) if TO-MOVE(s)= MAX
