@@ -43,7 +43,7 @@ public class COSC322Test extends GamePlayer{
     public static void main(String[] args) {
 		GamePlayer player;				 
     	//COSC322Test player = new COSC322Test(args[0], args[1]);
-		player = new COSC322Test("alex","123");
+		player = new COSC322Test("mac","123");
 		//player = new HumanPlayer();
 		player.connect();
 
@@ -115,6 +115,7 @@ public class COSC322Test extends GamePlayer{
                 if (isBlack)
                     System.out.print("Hello Black");
 					makeMinMaxMove();
+					// makeRandomMove();
 					
 					System.out.println(board.boardToString());
                 break;
@@ -123,11 +124,15 @@ public class COSC322Test extends GamePlayer{
                 getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
                 board = new Board((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
                 System.out.println(board.boardToString());
+				makeMinMaxMove();
 				// 	System.out.println(board.boardToString());
                 break;
             case GameMessage.GAME_ACTION_MOVE:
                 getGameGUI().updateGameState(msgDetails);
+				Action opAction = new Action(msgDetails);
+				board.updateBoardState(opAction, board);
 				makeMinMaxMove();
+				// makeRandomMove();
 				System.out.println(board.boardToString());
                 break;
             default:
@@ -146,19 +151,21 @@ public class COSC322Test extends GamePlayer{
 		Action move = actions.get((int) (Math.random() * actions.size()));
 		
 		System.out.println("About to send move");
+		getGameGUI().updateGameState(move.toServerResponse());
 		getGameClient().sendMoveMessage(move.toServerResponse());
-        getGameGUI().updateGameState(move.toServerResponse());
+        // getGameGUI().updateGameState(move.toServerResponse());
 
 		board.updateBoardState(move, board);
 	}
 
 	private void makeMinMaxMove(){
 		// will eventually use itertive deepening on a timer, tree will be smaller as game progresses
-		int depth = 2;
+		int depth = 1;
 		int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
 		Action bestAction = MinMax.findBestAction(board, depth, player);
 
 		System.out.println("making min max move for black? " + isBlack);
+		// getGameGUI().updateGameState(bestAction.toServerResponse());
 		getGameClient().sendMoveMessage(bestAction.toServerResponse());
         getGameGUI().updateGameState(bestAction.toServerResponse());
 
