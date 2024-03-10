@@ -42,25 +42,25 @@ public class COSC322Test extends GamePlayer{
      */
     public static void main(String[] args) {
 		GamePlayer player;
-		GamePlayer player2;				 
+		// GamePlayer player2;				 
     	//COSC322Test player = new COSC322Test(args[0], args[1]);
 		player = new COSC322Test("mac","123");
-		player2 = new COSC322Test("sam","456");
+		// player2 = new COSC322Test("sam","456");
 		//player = new HumanPlayer();
 		player.connect();
-		player2.connect();
+		// player2.connect();
 
 	
     	if(player.getGameGUI() == null) {
     		player.Go();
-			player2.Go();
+			// player2.Go();
     	}
     	else {
     		BaseGameGUI.sys_setup();
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
                 	player.Go();
-					player2.Go();
+					// player2.Go();
                 }
             });
     	}
@@ -120,8 +120,8 @@ public class COSC322Test extends GamePlayer{
                 player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
                 if (isBlack)
                     System.out.print("Hello Black");
-					makeMinMaxMove();
-					// makeRandomMove();
+					// makeMinMaxMove();
+					makeRandomMove();
 					
 					System.out.println(board.boardToString());
                 break;
@@ -138,10 +138,11 @@ public class COSC322Test extends GamePlayer{
 				Action opAction = new Action(msgDetails);
 				board.updateBoardState(opAction, board);
 				if(isBlack){
-					makeMinMaxMove();
+					//makeMinMaxMove();
+					makeRandomMove();
 				}
 				else{
-					// makeMinMaxMove();
+					//makeMinMaxMove();
 					makeRandomMove();
 				}
 				
