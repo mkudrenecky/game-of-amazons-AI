@@ -41,20 +41,26 @@ public class COSC322Test extends GamePlayer{
      * @param args for name and passwd (current, any string would work)
      */
     public static void main(String[] args) {
-		GamePlayer player;				 
+		GamePlayer player;
+		GamePlayer player2;				 
     	//COSC322Test player = new COSC322Test(args[0], args[1]);
 		player = new COSC322Test("mac","123");
+		player2 = new COSC322Test("sam","456");
 		//player = new HumanPlayer();
 		player.connect();
+		player2.connect();
 
+	
     	if(player.getGameGUI() == null) {
     		player.Go();
+			player2.Go();
     	}
     	else {
     		BaseGameGUI.sys_setup();
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
                 	player.Go();
+					player2.Go();
                 }
             });
     	}
@@ -131,9 +137,19 @@ public class COSC322Test extends GamePlayer{
                 getGameGUI().updateGameState(msgDetails);
 				Action opAction = new Action(msgDetails);
 				board.updateBoardState(opAction, board);
-				makeMinMaxMove();
+				if(isBlack){
+					makeMinMaxMove();
+				}
+				else{
+					// makeMinMaxMove();
+					makeRandomMove();
+				}
+				
 				// makeRandomMove();
 				System.out.println(board.boardToString());
+				if (ActionFactory.getActions(board, player == Board.BLACK_QUEEN ? Board.WHITE_QUEEN : Board.BLACK_QUEEN).size() == 0) {
+                    System.out.println("We("+ player+") won");
+                }
                 break;
             default:
                 assert (false);
@@ -146,14 +162,18 @@ public class COSC322Test extends GamePlayer{
 		// ArrayList<Action> actions = actionFactory.getActions(board, player);
 		System.out.println("making move for black? " + isBlack);
 		ArrayList<Action> actions = ActionFactory.getActions(board, isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN);
+		if (actions.size() == 0){
+			System.out.println("NO MORE MOVES FOR " + (isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN));
+			return;
+		}
 
 		System.out.println("WE made the actions");
 		Action move = actions.get((int) (Math.random() * actions.size()));
 		
 		System.out.println("About to send move");
-		getGameGUI().updateGameState(move.toServerResponse());
+		// getGameGUI().updateGameState(move.toServerResponse());
 		getGameClient().sendMoveMessage(move.toServerResponse());
-        // getGameGUI().updateGameState(move.toServerResponse());
+        getGameGUI().updateGameState(move.toServerResponse());
 
 		board.updateBoardState(move, board);
 	}
@@ -163,6 +183,10 @@ public class COSC322Test extends GamePlayer{
 		int depth = 1;
 		int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
 		Action bestAction = MinMax.findBestAction(board, depth, player);
+		if (bestAction == null){
+            System.out.println("No more moves for " + player);
+			return;
+        }
 
 		System.out.println("making min max move for black? " + isBlack);
 		// getGameGUI().updateGameState(bestAction.toServerResponse());

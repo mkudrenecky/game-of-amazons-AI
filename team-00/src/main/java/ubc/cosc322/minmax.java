@@ -18,7 +18,7 @@ public class MinMax {
         MinMax result = minMaxSearch(board, depth, alpha, beta, maximizingPlayer, player);
 
         Action bestAction = result.bestAction;
-
+        
         return bestAction;
     }
 
