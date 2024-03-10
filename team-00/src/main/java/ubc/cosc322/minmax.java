@@ -1,5 +1,6 @@
 package ubc.cosc322;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MinMax {
     public int evaluation;
@@ -68,10 +69,49 @@ public class MinMax {
     }
 
     private static int evaluate(Board board, int player){
-        
+
+        //int evaluation = mobilityHeuristic(board, player);
+        // System.out.println("Evaluation score for player: " + player + "= " + evaluation);
+        // System.out.println("Territory score for player: " + player + "= " + territoryHeuristic(board, player));
+        int evaluation = territoryHeuristic(board, player);
+        return evaluation;
+    }
+
+    private static int mobilityHeuristic(Board board, int player){
         int mobilityScore = ActionFactory.getActions(board, player).size() - ActionFactory.getActions(board, getOpponent(player)).size();
         System.out.println("Mobility score for player " + player + ": " + mobilityScore);
         return mobilityScore;
+    }
+
+    private static int territoryHeuristic(Board board, int player){
+        int playerTerritory = 0;
+        for(int i = 0; i < board.getBoardSize(); i++){
+            for(int j = 0; j < board.getBoardSize(); j++){
+                // System.out.println(ActionFactory.getActions(board, player).toString());
+                ArrayList<Action> playerActions =  ActionFactory.getActions(board, player);
+                ArrayList<Action> opponentActions =  ActionFactory.getActions(board, getOpponent(player));
+
+                // actions.stream().collect(Collectors.toMap(Action::actions.getQueenMove().getEndCol(), null));
+                int playerSquare = 0;
+                int opponentSquare = 0;
+                for(Action action : playerActions){
+                    if (action.getQueenMove().getEndCol() == i && action.getQueenMove().getEndRow() == j){
+                        playerSquare++;
+                    }
+                }
+                for(Action action : opponentActions){
+                    if (action.getQueenMove().getEndCol() == i && action.getQueenMove().getEndRow() == j){
+                        opponentSquare++;
+                }
+                int squareOwner = playerSquare - opponentSquare;
+                if(squareOwner < 0)
+                    playerTerritory--;
+                if(squareOwner > 0)
+                    playerTerritory++;
+            }
+        }
+    }
+        return playerTerritory;
     }
 
     private static int getOpponent(int player) {

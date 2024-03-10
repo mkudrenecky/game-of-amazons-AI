@@ -18,7 +18,6 @@ public class ActionFactory {
                         for (ArrowShot arrowShot : arrowMoves){
                             actions.add(new Action(queenMove, arrowShot));
                         }
-                    
                     }
                 }
             }

@@ -43,7 +43,7 @@ public class COSC322Test extends GamePlayer{
     public static void main(String[] args) {
 		GamePlayer player;				 
     	//COSC322Test player = new COSC322Test(args[0], args[1]);
-		player = new COSC322Test("alex","123");
+		player = new COSC322Test("sam","123");
 		//player = new HumanPlayer();
 		player.connect();
 
@@ -158,7 +158,7 @@ public class COSC322Test extends GamePlayer{
 
 	private void makeMinMaxMove(){
 		// will eventually use itertive deepening on a timer, tree will be smaller as game progresses
-		int depth = 2;
+		int depth = 1;
 		int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
 		Action bestAction = MinMax.findBestAction(board, depth, player);
 
