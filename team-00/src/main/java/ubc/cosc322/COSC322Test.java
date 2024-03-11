@@ -120,8 +120,8 @@ public class COSC322Test extends GamePlayer{
                 player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
                 if (isBlack)
                     System.out.print("Hello Black");
-					// makeMinMaxMove();
-					makeRandomMove();
+					makeMinMaxMove();
+					// makeRandomMove();
 					
 					System.out.println(board.boardToString());
                 break;
@@ -138,12 +138,12 @@ public class COSC322Test extends GamePlayer{
 				Action opAction = new Action(msgDetails);
 				board.updateBoardState(opAction, board);
 				if(isBlack){
-					//makeMinMaxMove();
-					makeRandomMove();
+					makeMinMaxMove();
+					// makeRandomMove();
 				}
 				else{
-					//makeMinMaxMove();
-					makeRandomMove();
+					makeMinMaxMove();
+					// makeRandomMove();
 				}
 				
 				// makeRandomMove();
@@ -185,7 +185,8 @@ public class COSC322Test extends GamePlayer{
 		int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
 		Action bestAction = MinMax.findBestAction(board, depth, player);
 		if (bestAction == null){
-            System.out.println("No more moves for " + player);
+            System.out.println("No more moves for " + player + ", we lose! :( :( :( :(");
+			System.exit(0);
 			return;
         }
 
