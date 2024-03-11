@@ -11,10 +11,10 @@ public class MinMax {
         this.bestAction = bestAction;
     }
 
-    public static Action findBestAction(Board board, int depth, int player) {
+    public static Action findBestAction(Board board, byte depth, byte player) {
         int alpha = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
-        int maximizingPlayer = player;
+        byte maximizingPlayer = player;
 
         MinMax result = minMaxSearch(board, depth, alpha, beta, maximizingPlayer, player);
 
@@ -23,7 +23,7 @@ public class MinMax {
         return bestAction;
     }
 
-    private static MinMax minMaxSearch(Board board, int depth, int alpha, int beta, int maximizingPlayer, int currentPlayer) {
+    private static MinMax minMaxSearch(Board board, byte depth, int alpha, int beta, byte maximizingPlayer, byte currentPlayer) {
         List<Action> legalActions = ActionFactory.getActions(board, currentPlayer);
         if (depth == 0 || legalActions.isEmpty()) {
             return new MinMax (evaluate(board, maximizingPlayer), null);
@@ -37,7 +37,7 @@ public class MinMax {
                 Board nextBoard = new Board(board, action);
                 // System.out.println(nextBoard.boardToString());
                 // System.out.println(board.boardToString());
-                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer)).evaluation;
+                int eval = minMaxSearch(nextBoard, (byte) (depth - 1), alpha, beta, maximizingPlayer, getOpponent(currentPlayer)).evaluation;
                 if (eval > maxEval) {
                     maxEval = eval;
                     bestAction = action;
@@ -54,7 +54,7 @@ public class MinMax {
                 Board nextBoard = new Board(board, action);
                 // System.out.println(nextBoard.boardToString());
                 // System.out.println(board.boardToString());
-                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer)).evaluation;
+                int eval = minMaxSearch(nextBoard, (byte) (depth - 1), alpha, beta, maximizingPlayer, getOpponent(currentPlayer)).evaluation;
                 if (eval < minEval) {
                     minEval = eval;
                     bestAction = action;
@@ -68,23 +68,23 @@ public class MinMax {
         }
     }
 
-    private static int evaluate(Board board, int player){
+    private static int evaluate(Board board, byte player){
 
-        //int evaluation = mobilityHeuristic(board, player);
+        int evaluation = mobilityHeuristic(board, player);
         // System.out.println("Evaluation score for player: " + player + "= " + evaluation);
         // System.out.println("Territory score for player: " + player + "= " + territoryHeuristic(board, player));
-        int evaluation = territoryHeuristic(board, player);
+        // byte evaluation = territoryHeuristic(board, player);
         return evaluation;
     }
 
-    private static int mobilityHeuristic(Board board, int player){
+    private static int mobilityHeuristic(Board board, byte player){
         int mobilityScore = ActionFactory.getActions(board, player).size() - ActionFactory.getActions(board, getOpponent(player)).size();
-        System.out.println("Mobility score for player " + player + ": " + mobilityScore);
+        // System.out.println("Mobility score for player " + player + ": " + mobilityScore);
         return mobilityScore;
     }
 
-    private static int territoryHeuristic(Board board, int player){
-        int playerTerritory = 0;
+    private static byte territoryHeuristic(Board board, byte player){
+        byte playerTerritory = 0;
         for(int i = 0; i < board.getBoardSize(); i++){
             for(int j = 0; j < board.getBoardSize(); j++){
                 // System.out.println(ActionFactory.getActions(board, player).toString());
@@ -114,8 +114,8 @@ public class MinMax {
         return playerTerritory;
     }
 
-    private static int getOpponent(int player) {
-        return player == 1 ? 2 : 1;
+    private static byte getOpponent(byte player) {
+        return (byte) ((byte) player == 1 ? 2 : 1);
     }
 }
     /*MINIMAX(s) =

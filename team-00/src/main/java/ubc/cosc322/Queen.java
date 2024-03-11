@@ -2,10 +2,10 @@ package ubc.cosc322;
 
 public class Queen {
     private Player player;
-    private int x;
-    private int y;
+    private byte x;
+    private byte y;
 
-    public Queen(Player player, int x, int y) {
+    public Queen(Player player, byte x, byte y) {
         this.player = player;
         this.x = x;
         this.y = y;
@@ -15,11 +15,11 @@ public class Queen {
         return player;
     }
 
-    public int getX() {
+    public byte getX() {
         return x;
     }
 
-    public int getY() {
+    public byte getY() {
         return y;
     }
 }

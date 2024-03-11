@@ -1,18 +1,18 @@
 package ubc.cosc322;
 
 public class Arrow {
-    private int row, col;
+    private byte row, col;
 
-    public Arrow (int row, int col){
+    public Arrow (byte row, byte col){
         this.row = row;
         this.col = col;
     }
 
-    public int getRow() {
+    public byte getRow() {
         return row;
     }
 
-    public int getCol() {
+    public byte getCol() {
         return col;
     }
 }

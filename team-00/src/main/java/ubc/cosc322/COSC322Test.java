@@ -30,7 +30,7 @@ public class COSC322Test extends GamePlayer{
     private String userName = null;
     private String passwd = null;
 	private Board board;
-	private int player;
+	private byte player;
 	private Action action;
 	// private ActionFactory actionFactory;
 	private boolean isBlack;
@@ -97,12 +97,12 @@ public class COSC322Test extends GamePlayer{
     	//For a detailed description of the message types and format, 
     	//see the method GamePlayer.handleGameMessage() in the game-client-api document. 
 
-		 // Print out the message details
+		 // println out the message details
 		//  System.out.println("Message Type: " + messageType);
 		//  System.out.println("Message Details: " + msgDetails);
 
 		// if(messageType.equals(GameMessage.GAME_STATE_BOARD)){
-		// 	getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
+		// 	getGameGUI().setGameState((ArrayList<byteeger>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
 		// }
 		// else if(messageType.equals(GameMessage.GAME_ACTION_MOVE)){
 		// 	getGameGUI().updateGameState(msgDetails);
@@ -112,12 +112,12 @@ public class COSC322Test extends GamePlayer{
 		
 		switch (messageType) {
             case GameMessage.GAME_ACTION_START:
-				System.out.print("Lets go");
+				System.out.println("Lets go");
                 //Black goes first
                 isBlack = msgDetails.get(AmazonsGameMessage.PLAYER_BLACK).equals(getGameClient().getUserName());
                 player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
                 if (isBlack)
-                    System.out.print("Hello Black");
+                    System.out.println("Hello Black");
 					makeMinMaxMove();
 					
 					System.out.println(board.boardToString());
@@ -125,7 +125,7 @@ public class COSC322Test extends GamePlayer{
             case GameMessage.GAME_STATE_BOARD:
 			System.out.println("Message Details: " + msgDetails);
                 getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
-                board = new Board((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
+                board = new Board((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE), false);
                 System.out.println(board.boardToString());
 				// 	System.out.println(board.boardToString());
                 break;
@@ -147,7 +147,7 @@ public class COSC322Test extends GamePlayer{
 		ArrayList<Action> actions = ActionFactory.getActions(board, isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN);
 
 		System.out.println("WE made the actions");
-		Action move = actions.get((int) (Math.random() * actions.size()));
+		Action move = actions.get((byte) (Math.random() * actions.size()));
 		
 		System.out.println("About to send move");
 		getGameClient().sendMoveMessage(move.toServerResponse());
@@ -158,8 +158,8 @@ public class COSC322Test extends GamePlayer{
 
 	private void makeMinMaxMove(){
 		// will eventually use itertive deepening on a timer, tree will be smaller as game progresses
-		int depth = 1;
-		int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
+		byte depth = 2;
+		byte player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
 		Action bestAction = MinMax.findBestAction(board, depth, player);
 
 		System.out.println("making min max move for black? " + isBlack);

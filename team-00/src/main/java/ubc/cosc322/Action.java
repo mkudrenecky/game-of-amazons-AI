@@ -10,7 +10,7 @@ import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
 public class Action {
     private QueenMove queenMove;
     private ArrowShot arrowShot;
-    private int player;
+    private byte player;
    
     public Action(QueenMove queenMove, ArrowShot arrowShot) {
         this.queenMove = queenMove;

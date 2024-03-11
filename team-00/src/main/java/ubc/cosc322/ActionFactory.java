@@ -9,8 +9,8 @@ public class ActionFactory {
         // System.out.println("Generating actions.. for: " + player);
         ArrayList<Action> actions = new ArrayList<>();
 
-        for (int i = 0; i < board.getBoardSize(); i++){
-            for (int j = 0; j < board.getBoardSize(); j++){
+        for (byte i = 0; i < board.getBoardSize(); i++){
+            for (byte j = 0; j < board.getBoardSize(); j++){
                 if (board.getPieceAt(i,j) != 0 && board.getPieceAt(i, j) == player){
                     List<QueenMove> queenMoves = generateQueenMoves(board, i, j);
                     for (QueenMove queenMove : queenMoves){
@@ -153,8 +153,8 @@ public class ActionFactory {
         if (endRow >= board.getBoardSize() || endCol >= board.getBoardSize() || endRow < 0 || endCol < 0){
             return false;
         }
-        if (board.getPieceAt(endRow, endCol) == 0){
-            queenMoves.add(new QueenMove(startRow, startCol, endRow, endCol));
+        if (board.getPieceAt((byte) endRow, (byte) endCol) == 0){
+            queenMoves.add(new QueenMove((byte)startRow, (byte)startCol, (byte)endRow,(byte) endCol));
             return true;
         }
         return false;
@@ -164,8 +164,8 @@ public class ActionFactory {
         if (endRow >= board.getBoardSize() || endCol >= board.getBoardSize() || endRow < 0 || endCol < 0){
             return false;
         }
-        if (board.getPieceAt(endRow, endCol) == 0){
-            arrowMoves.add(new ArrowShot(startRow, startCol, endRow, endCol));
+        if (board.getPieceAt((byte)endRow, (byte)endCol) == 0){
+            arrowMoves.add(new ArrowShot((byte)startRow, (byte)startCol, (byte)endRow, (byte)endCol));
             return true;
         }
         return false;
