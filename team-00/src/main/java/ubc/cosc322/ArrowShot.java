@@ -9,6 +9,10 @@ public class ArrowShot {
         this.endRow = endRow;
         this.endCol = endCol;
     }
+    public ArrowShot(int endRow, int endCol){
+        this.endRow = endRow;
+        this.endCol = endCol;
+    }
 
     public int getStartRow() {
         return startRow;

@@ -18,7 +18,7 @@ public class MinMax {
         MinMax result = minMaxSearch(board, depth, alpha, beta, maximizingPlayer, player);
 
         Action bestAction = result.bestAction;
-
+        
         return bestAction;
     }
 
@@ -70,7 +70,7 @@ public class MinMax {
     private static int evaluate(Board board, int player){
         
         int mobilityScore = ActionFactory.getActions(board, player).size() - ActionFactory.getActions(board, getOpponent(player)).size();
-        System.out.println("Mobility score for player " + player + ": " + mobilityScore);
+        // System.out.println("Mobility score for player " + player + ": " + mobilityScore);
         return mobilityScore;
     }
 

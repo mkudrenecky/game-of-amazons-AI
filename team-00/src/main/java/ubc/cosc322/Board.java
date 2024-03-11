@@ -49,6 +49,11 @@ public class Board {
     public void updateBoardState(Action action, Board board){
         QueenMove move = action.getQueenMove();
         ArrowShot arrow = action.getArrowShot();
+        if(arrow.getEndCol() == move.getEndCol() && arrow.getEndRow() == move.getEndRow()){
+            System.out.println("THE PIECS OVER LAPPED!!!!!!!!!!!!!!!!!!");
+            // System.exit(0);
+        };
+        
 
         // get the color/player that made the move
         int player = board.getPieceAt(move.getStartRow(),move.getStartCol());
