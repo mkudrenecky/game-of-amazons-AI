@@ -1,4 +1,3 @@
-
 package ubc.cosc322;
 
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class COSC322Test extends GamePlayer{
 		GamePlayer player;
 		// GamePlayer player2;				 
     	//COSC322Test player = new COSC322Test(args[0], args[1]);
-		player = new COSC322Test("mac","123");
+		player = new COSC322Test("aaa","123");
 		// player2 = new COSC322Test("sam","456");
 		//player = new HumanPlayer();
 		player.connect();
@@ -83,17 +82,13 @@ public class COSC322Test extends GamePlayer{
 
 
     @Override
-	public void onLogin() {
-		if (gameClient != null && gameClient.getUserName() != null) {
-			userName = gameClient.getUserName();
-			if (gamegui != null) {
-				gamegui.setRoomInformation(gameClient.getRoomList());
-			}
-		} else {
-			System.err.println("Error: Game client or user is not initialized.");
-		}
+    public void onLogin() {
+    	
+		userName = gameClient.getUserName();
+		if(gamegui != null) {
+			gamegui.setRoomInformation(gameClient.getRoomList());
+    	}
 	}
-
 
     @Override
     public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
@@ -125,7 +120,7 @@ public class COSC322Test extends GamePlayer{
                 if (isBlack)
                     System.out.print("Hello Black");
 					// makeMinMaxMove();
-					makeRandomMove();
+					makeMinMaxMove();
 					
 					System.out.println(board.boardToString());
                 break;
@@ -143,11 +138,11 @@ public class COSC322Test extends GamePlayer{
 				board.updateBoardState(opAction, board);
 				if(isBlack){
 					//makeMinMaxMove();
-					makeRandomMove();
+					makeMinMaxMove();
 				}
 				else{
 					//makeMinMaxMove();
-					makeRandomMove();
+					makeMinMaxMove();
 				}
 				
 				// makeRandomMove();
@@ -163,44 +158,86 @@ public class COSC322Test extends GamePlayer{
 
     }
 
-	private void makeRandomMove(){
-		// ArrayList<Action> actions = actionFactory.getActions(board, player);
-		System.out.println("making move for black? " + isBlack);
-		ArrayList<Action> actions = ActionFactory.getActions(board, isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN);
-		if (actions.size() == 0){
-			System.out.println("NO MORE MOVES FOR " + (isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN));
-			return;
-		}
+	// private void makeRandomMove(){
+	// 	// ArrayList<Action> actions = actionFactory.getActions(board, player);
+	// 	System.out.println("making move for black? " + isBlack);
+	// 	ArrayList<Action> actions = ActionFactory.getActions(board, isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN);
+	// 	if (actions.size() == 0){
+	// 		System.out.println("NO MORE MOVES FOR " + (isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN));
+	// 		return;
+	// 	}
 
-		System.out.println("WE made the actions");
-		Action move = actions.get((int) (Math.random() * actions.size()));
+	// 	System.out.println("WE made the actions");
+	// 	Action move = actions.get((int) (Math.random() * actions.size()));
 		
-		System.out.println("About to send move");
-		// getGameGUI().updateGameState(move.toServerResponse());
-		getGameClient().sendMoveMessage(move.toServerResponse());
-        getGameGUI().updateGameState(move.toServerResponse());
+	// 	System.out.println("About to send move");
+	// 	// getGameGUI().updateGameState(move.toServerResponse());
+	// 	getGameClient().sendMoveMessage(move.toServerResponse());
+    //     getGameGUI().updateGameState(move.toServerResponse());
 
-		board.updateBoardState(move, board);
-	}
+	// 	board.updateBoardState(move, board);
+	// }
 
-	private void makeMinMaxMove(){
-		// will eventually use itertive deepening on a timer, tree will be smaller as game progresses
-		int depth = 1;
-		int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
-		Action bestAction = MinMax.findBestAction(board, depth, player);
-		if (bestAction == null){
-            System.out.println("No more moves for " + player);
-			return;
-        }
+	private void makeMinMaxMove() {
+    int depth = 1;
+    int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
+    Action bestAction = MinMax.findBestAction(board, depth, player);
+    if (bestAction == null) {
+        System.out.println("No more moves for " + player);
+        return;
+    }
 
-		System.out.println("making min max move for black? " + isBlack);
-		// getGameGUI().updateGameState(bestAction.toServerResponse());
-		getGameClient().sendMoveMessage(bestAction.toServerResponse());
-        getGameGUI().updateGameState(bestAction.toServerResponse());
+    QueenMove queenMove = bestAction.getQueenMove();
+    ArrowShot arrowShot = bestAction.getArrowShot();
 
-		board.updateBoardState(bestAction, board);
-	}
-    
+    if (!isMoveLegal(queenMove, arrowShot)) {
+        System.out.println("Illegal move made: Queen move from (" + queenMove.getStartRow() + ", " + queenMove.getStartCol() + ") to (" + queenMove.getEndRow() + ", " + queenMove.getEndCol() + ") and arrow shot from (" + arrowShot.getStartRow() + ", " + arrowShot.getStartCol() + ") to (" + arrowShot.getEndRow() + ", " + arrowShot.getEndCol() + ")");
+        System.exit(1);
+    }
+
+    getGameClient().sendMoveMessage(bestAction.toServerResponse());
+    getGameGUI().updateGameState(bestAction.toServerResponse());
+    board.updateBoardState(bestAction, board);
+}
+
+    private boolean isMoveLegal(QueenMove queenMove, ArrowShot arrowShot) {
+    // Check if the queen move is within the board boundaries
+    if (queenMove.getStartRow() < 0 || queenMove.getStartRow() >= Board.BOARD_SIZE ||
+        queenMove.getStartCol() < 0 || queenMove.getStartCol() >= Board.BOARD_SIZE ||
+        queenMove.getEndRow() < 0 || queenMove.getEndRow() >= Board.BOARD_SIZE ||
+        queenMove.getEndCol() < 0 || queenMove.getEndCol() >= Board.BOARD_SIZE) {
+        System.out.println("Illegal move: Queen move is out of bounds.");
+        System.exit(1);
+        return false;
+    }
+
+    // Check if the square for the queen move is taken or has been shot
+    if (board.getPieceAt(queenMove.getEndRow(), queenMove.getEndCol()) != 0) {
+        System.out.println("Illegal move: Queen move target square is taken or has been shot.");
+        System.exit(1);
+        return false;
+    }
+
+    // Check if the arrow shot is within the board boundaries
+    if (arrowShot.getStartRow() < 0 || arrowShot.getStartRow() >= Board.BOARD_SIZE ||
+        arrowShot.getStartCol() < 0 || arrowShot.getStartCol() >= Board.BOARD_SIZE ||
+        arrowShot.getEndRow() < 0 || arrowShot.getEndRow() >= Board.BOARD_SIZE ||
+        arrowShot.getEndCol() < 0 || arrowShot.getEndCol() >= Board.BOARD_SIZE) {
+        System.out.println("Illegal move: Arrow shot is out of bounds.");
+        System.exit(1);
+        return false;
+    }
+
+    // Check if the square for the arrow shot is taken or has been shot
+    if (board.getPieceAt(arrowShot.getEndRow(), arrowShot.getEndCol()) != 0) {
+        System.out.println("Illegal move: Arrow shot target square is taken or has been shot.");
+        System.exit(1);
+        return false;
+    }
+
+    return true; // Move is legal
+}
+
     
     @Override
     public String userName() {
@@ -227,3 +264,4 @@ public class COSC322Test extends GamePlayer{
 
  
 }//end of class
+

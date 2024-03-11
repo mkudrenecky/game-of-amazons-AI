@@ -4,6 +4,7 @@ import java.util.List;
 
 public class ActionFactory {
 
+
     public static ArrayList<Action> getActions(Board board, int player){
         // System.out.println("Generating actions.. for: " + player);
         ArrayList<Action> actions = new ArrayList<>();
@@ -205,36 +206,31 @@ public class ActionFactory {
         return arrowMoves;
     }
 
-    private static boolean addQueenMoveIfValid(int startRow, int startCol, int endRow, int endCol, Board board, List<QueenMove> queenMoves){
-        if (endRow >= board.getBoardSize() || endCol >= board.getBoardSize() || endRow < 0 || endCol < 0){
-            return false;
-        }
-        if (startRow == endRow && startCol == endCol){
-            return true;
-        }
-        if (board.getPieceAt(endRow, endCol) == 0){
-            queenMoves.add(new QueenMove(startRow, startCol, endRow, endCol));
-            return true;
-        }
+    private static boolean addQueenMoveIfValid(int startRow, int startCol, int endRow, int endCol, Board board, List<QueenMove> queenMoves) {
+    if (endRow >= board.getBoardSize() || endCol >= board.getBoardSize() || endRow < 0 || endCol < 0) {
         return false;
     }
-
-    private static boolean addArrowMoveIfValid(int startRow, int startCol, int endRow, int endCol, Board board, List<ArrowShot> arrowMoves, int queenStartRow, int queenStartCol){
-        if (endRow >= board.getBoardSize() || endCol >= board.getBoardSize() || endRow < 0 || endCol < 0){
-            return false;
-        }
-        if (startRow == endRow && startCol == endCol){
-            return true;
-        }
-
-        if (board.getPieceAt(endRow, endCol) == 0 || (endRow == queenStartRow && endCol == queenStartCol)){
-            arrowMoves.add(new ArrowShot(startRow, startCol, endRow, endCol));
-            return true;
-        }
-    
-        return false;
+    if (startRow == endRow && startCol == endCol) {
+        return true;
     }
+    if (board.getPieceAt(endRow, endCol) == 0) {
+        queenMoves.add(new QueenMove(startRow, startCol, endRow, endCol));
+        return true;
+    }
+    return false;
 }
 
-
-
+private static boolean addArrowMoveIfValid(int startRow, int startCol, int endRow, int endCol, Board board, List<ArrowShot> arrowMoves, int queenStartRow, int queenStartCol) {
+    if (endRow >= board.getBoardSize() || endCol >= board.getBoardSize() || endRow < 0 || endCol < 0) {
+        return false;
+    }
+    if (startRow == endRow && startCol == endCol) {
+        return true;
+    }
+    if (board.getPieceAt(endRow, endCol) == 0 && (endRow != queenStartRow || endCol != queenStartCol)) {
+        arrowMoves.add(new ArrowShot(startRow, startCol, endRow, endCol));
+        return true;
+    }
+    return false;
+}
+}
