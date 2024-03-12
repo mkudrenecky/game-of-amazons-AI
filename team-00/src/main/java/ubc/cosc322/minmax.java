@@ -10,19 +10,19 @@ public class MinMax {
         this.bestAction = bestAction;
     }
 
-    public static Action findBestAction(Board board, int depth, int player) {
+    public static Action findBestAction(Board board, int depth, int player, int heuristic) {
         int alpha = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
         int maximizingPlayer = player;
 
-        MinMax result = minMaxSearch(board, depth, alpha, beta, maximizingPlayer, player);
+        MinMax result = minMaxSearch(board, depth, alpha, beta, maximizingPlayer, player, heuristic);
 
         Action bestAction = result.bestAction;
 
         return bestAction;
     }
 
-    private static MinMax minMaxSearch(Board board, int depth, int alpha, int beta, int maximizingPlayer, int currentPlayer) {
+    private static MinMax minMaxSearch(Board board, int depth, int alpha, int beta, int maximizingPlayer, int currentPlayer, int heuristic) {
         List<Action> legalActions = ActionFactory.getActions(board, currentPlayer);
         if (depth == 0 || legalActions.isEmpty()) {
             return new MinMax (evaluate(board, maximizingPlayer), null);
@@ -67,11 +67,60 @@ public class MinMax {
         }
     }
 
-    private static int evaluate(Board board, int player){
-        
+    private static int evaluate(Board board, int player, int heuristic){
+        int evaluation = Integer.MIN_VALUE;
+        switch(heuristic){
+            case 0:
+                evalutation = randomHeuristic(board, player);
+                break;
+            case 1:
+                evaluation = mobilityHeuristic(board, player);
+                break;
+            case 2:
+                evaluation = territoryHeuristic(board, player);
+                break;
+            case 3:
+                //mobility-territory heuristic
+                break;
+        }
+        return evaluation;
+    }
+    
+    private static int mobilityHeuristic(Board board, byte player){
         int mobilityScore = ActionFactory.getActions(board, player).size() - ActionFactory.getActions(board, getOpponent(player)).size();
-        System.out.println("Mobility score for player " + player + ": " + mobilityScore);
+        // System.out.println("Mobility score for player " + player + ": " + mobilityScore);
         return mobilityScore;
+    }
+
+    private static byte territoryHeuristic(Board board, byte player){
+        byte playerTerritory = 0;
+        for(int i = 0; i < board.getBoardSize(); i++){
+            for(int j = 0; j < board.getBoardSize(); j++){
+                // System.out.println(ActionFactory.getActions(board, player).toString());
+                ArrayList<Action> playerActions =  ActionFactory.getActions(board, player);
+                ArrayList<Action> opponentActions =  ActionFactory.getActions(board, getOpponent(player));
+
+                // actions.stream().collect(Collectors.toMap(Action::actions.getQueenMove().getEndCol(), null));
+                int playerSquare = 0;
+                int opponentSquare = 0;
+                for(Action action : playerActions){
+                    if (action.getQueenMove().getEndCol() == i && action.getQueenMove().getEndRow() == j){
+                        playerSquare++;
+                    }
+                }
+                for(Action action : opponentActions){
+                    if (action.getQueenMove().getEndCol() == i && action.getQueenMove().getEndRow() == j){
+                        opponentSquare++;
+                }
+                int squareOwner = playerSquare - opponentSquare;
+                if(squareOwner < 0)
+                    playerTerritory--;
+                if(squareOwner > 0)
+                    playerTerritory++;
+            }
+        }
+    }
+        return playerTerritory;
     }
 
     private static int getOpponent(int player) {
