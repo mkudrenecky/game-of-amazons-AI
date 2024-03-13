@@ -41,25 +41,25 @@ public class COSC322Test extends GamePlayer{
      */
     public static void main(String[] args) {
 		GamePlayer player;
-		// GamePlayer player2;				 
+		GamePlayer player2;				 
     	//COSC322Test player = new COSC322Test(args[0], args[1]);
 		player = new COSC322Test("aaa","123");
-		// player2 = new COSC322Test("sam","456");
+		player2 = new COSC322Test("sam","456");
 		//player = new HumanPlayer();
 		player.connect();
-		// player2.connect();
+		player2.connect();
 
 	
     	if(player.getGameGUI() == null) {
     		player.Go();
-			// player2.Go();
+			player2.Go();
     	}
     	else {
     		BaseGameGUI.sys_setup();
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
                 	player.Go();
-					// player2.Go();
+					player2.Go();
                 }
             });
     	}
@@ -92,25 +92,7 @@ public class COSC322Test extends GamePlayer{
 
     @Override
     public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
-    	//This method will be called by the GameClient when it receives a game-related message
-    	//from the server.
-	
-    	//For a detailed description of the message types and format, 
-    	//see the method GamePlayer.handleGameMessage() in the game-client-api document. 
-
-		 // Print out the message details
-		//  System.out.println("Message Type: " + messageType);
-		//  System.out.println("Message Details: " + msgDetails);
-
-		// if(messageType.equals(GameMessage.GAME_STATE_BOARD)){
-		// 	getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
-		// }
-		// else if(messageType.equals(GameMessage.GAME_ACTION_MOVE)){
-		// 	getGameGUI().updateGameState(msgDetails);
-		// }
-    	    	
-    	// return true; 
-		
+    			
 		switch (messageType) {
             case GameMessage.GAME_ACTION_START:
 				System.out.print("Lets go");
@@ -119,8 +101,8 @@ public class COSC322Test extends GamePlayer{
                 player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
                 if (isBlack)
                     System.out.print("Hello Black");
-					// makeMinMaxMove();
 					makeMinMaxMove();
+					// makeRandomMove();
 					
 					System.out.println(board.boardToString());
                 break;
@@ -133,15 +115,23 @@ public class COSC322Test extends GamePlayer{
 				// 	System.out.println(board.boardToString());
                 break;
             case GameMessage.GAME_ACTION_MOVE:
-                getGameGUI().updateGameState(msgDetails);
+                // getGameGUI().updateGameState(msgDetails);
 				Action opAction = new Action(msgDetails);
+            //    board.updateBoardState(opAction, board);
+                QueenMove OPqueenMove = opAction.getQueenMove();
+                ArrowShot OParrowShot = opAction.getArrowShot();
+                if (!isMoveLegal(OPqueenMove, OParrowShot)) {
+                    System.out.println("Illegal move made: Queen move from (" + OPqueenMove.getStartRow() + ", " + OPqueenMove.getStartCol() + ") to (" + OPqueenMove.getEndRow() + ", " + OPqueenMove.getEndCol() + ") and arrow shot from (" + OParrowShot.getStartRow() + ", " + OParrowShot.getStartCol() + ") to (" + OParrowShot.getEndRow() + ", " + OParrowShot.getEndCol() + ")");
+                    System.exit(1);
+                }
+                getGameGUI().updateGameState(msgDetails);
 				board.updateBoardState(opAction, board);
 				if(isBlack){
-					//makeMinMaxMove();
+					// makeRandomMove();
 					makeMinMaxMove();
 				}
 				else{
-					//makeMinMaxMove();
+					// makeRandomMove();
 					makeMinMaxMove();
 				}
 				
@@ -158,25 +148,25 @@ public class COSC322Test extends GamePlayer{
 
     }
 
-	// private void makeRandomMove(){
-	// 	// ArrayList<Action> actions = actionFactory.getActions(board, player);
-	// 	System.out.println("making move for black? " + isBlack);
-	// 	ArrayList<Action> actions = ActionFactory.getActions(board, isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN);
-	// 	if (actions.size() == 0){
-	// 		System.out.println("NO MORE MOVES FOR " + (isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN));
-	// 		return;
-	// 	}
+	private void makeRandomMove(){
+		// ArrayList<Action> actions = actionFactory.getActions(board, player);
+		System.out.println("making move for black? " + isBlack);
+		ArrayList<Action> actions = ActionFactory.getActions(board, isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN);
+		if (actions.size() == 0){
+			System.out.println("NO MORE MOVES FOR " + (isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN));
+			return;
+		}
 
-	// 	System.out.println("WE made the actions");
-	// 	Action move = actions.get((int) (Math.random() * actions.size()));
+		System.out.println("WE made the actions");
+		Action move = actions.get((int) (Math.random() * actions.size()));
 		
-	// 	System.out.println("About to send move");
-	// 	// getGameGUI().updateGameState(move.toServerResponse());
-	// 	getGameClient().sendMoveMessage(move.toServerResponse());
-    //     getGameGUI().updateGameState(move.toServerResponse());
+		System.out.println("About to send move");
+		// getGameGUI().updateGameState(move.toServerResponse());
+		getGameClient().sendMoveMessage(move.toServerResponse());
+        getGameGUI().updateGameState(move.toServerResponse());
 
-	// 	board.updateBoardState(move, board);
-	// }
+		board.updateBoardState(move, board);
+	}
 
 	private void makeMinMaxMove() {
     int depth = 1;
@@ -191,13 +181,14 @@ public class COSC322Test extends GamePlayer{
     ArrowShot arrowShot = bestAction.getArrowShot();
 
     if (!isMoveLegal(queenMove, arrowShot)) {
-        System.out.println("Illegal move made: Queen move from (" + queenMove.getStartRow() + ", " + queenMove.getStartCol() + ") to (" + queenMove.getEndRow() + ", " + queenMove.getEndCol() + ") and arrow shot from (" + arrowShot.getStartRow() + ", " + arrowShot.getStartCol() + ") to (" + arrowShot.getEndRow() + ", " + arrowShot.getEndCol() + ")");
+        System.out.println(" In method! Illegal move made: Queen move from (" + queenMove.getStartRow() + ", " + queenMove.getStartCol() + ") to (" + queenMove.getEndRow() + ", " + queenMove.getEndCol() + ") and arrow shot from (" + arrowShot.getStartRow() + ", " + arrowShot.getStartCol() + ") to (" + arrowShot.getEndRow() + ", " + arrowShot.getEndCol() + ")");
         System.exit(1);
     }
 
+    board.updateBoardState(bestAction, board);
     getGameClient().sendMoveMessage(bestAction.toServerResponse());
     getGameGUI().updateGameState(bestAction.toServerResponse());
-    board.updateBoardState(bestAction, board);
+    // board.updateBoardState(bestAction, board);
 }
 
     private boolean isMoveLegal(QueenMove queenMove, ArrowShot arrowShot) {
@@ -207,14 +198,14 @@ public class COSC322Test extends GamePlayer{
         queenMove.getEndRow() < 0 || queenMove.getEndRow() >= Board.BOARD_SIZE ||
         queenMove.getEndCol() < 0 || queenMove.getEndCol() >= Board.BOARD_SIZE) {
         System.out.println("Illegal move: Queen move is out of bounds.");
-        System.exit(1);
+        // System.exit(1);
         return false;
     }
 
     // Check if the square for the queen move is taken or has been shot
-    if (board.getPieceAt(queenMove.getEndRow(), queenMove.getEndCol()) != 0) {
+    if (board.getPieceAt(queenMove.getEndRow(), queenMove.getEndCol()) != 0 && (queenMove.getEndRow() != arrowShot.getEndRow()) && (queenMove.getEndCol() != arrowShot.getEndCol()) ) {
         System.out.println("Illegal move: Queen move target square is taken or has been shot.");
-        System.exit(1);
+        // System.exit(1);
         return false;
     }
 
@@ -224,14 +215,14 @@ public class COSC322Test extends GamePlayer{
         arrowShot.getEndRow() < 0 || arrowShot.getEndRow() >= Board.BOARD_SIZE ||
         arrowShot.getEndCol() < 0 || arrowShot.getEndCol() >= Board.BOARD_SIZE) {
         System.out.println("Illegal move: Arrow shot is out of bounds.");
-        System.exit(1);
+        // System.exit(1);
         return false;
     }
 
     // Check if the square for the arrow shot is taken or has been shot
-    if (board.getPieceAt(arrowShot.getEndRow(), arrowShot.getEndCol()) != 0) {
+    if (board.getPieceAt(arrowShot.getEndRow(), arrowShot.getEndCol()) != 0 && ((queenMove.getStartRow() != arrowShot.getEndRow()) && (queenMove.getStartCol() != arrowShot.getEndCol())) ) {
         System.out.println("Illegal move: Arrow shot target square is taken or has been shot.");
-        System.exit(1);
+        // System.exit(1);
         return false;
     }
 

@@ -29,60 +29,60 @@ public class ActionFactory {
     private static List<QueenMove> generateQueenMoves(Board board, int startRow, int startCol){
         List<QueenMove> queenMoves = new ArrayList<>();
         // move up
-        for (int row = 0; startRow + row < board.getBoardSize(); row++){
-            if (!addQueenMoveIfValid(startRow, startCol, row, startCol, board, queenMoves)){
+        for (int row = 1; startRow + row < board.getBoardSize(); row++){
+            if (!addQueenMoveIfValid(startRow, startCol, startRow + row, startCol, board, queenMoves)){
                 break;
             }
         }
 
         // move left
-        for (int col = 0; startCol - col >= 0; col++){
-            if (!addQueenMoveIfValid(startRow, startCol, startRow, col, board, queenMoves)){
+        for (int col = 1; startCol - col >= 0; col++){
+            if (!addQueenMoveIfValid(startRow, startCol, startRow, startCol - col, board, queenMoves)){
                 break;
             }
         }
 
         // move right
-        for (int col = 0; startCol + col < board.getBoardSize(); col++){
-            if (!addQueenMoveIfValid(startRow, startCol, startRow, col, board, queenMoves)){
+        for (int col = 1; startCol + col < board.getBoardSize(); col++){
+            if (!addQueenMoveIfValid(startRow, startCol, startRow, startCol + col, board, queenMoves)){
                 break;
             }
         }
 
         // move down
-        for (int row = 0; startRow - row >= 0; row++){
-            if (!addQueenMoveIfValid(startRow, startCol, row, startCol, board, queenMoves)){
+        for (int row = 1; startRow - row >= 0; row++){
+            if (!addQueenMoveIfValid(startRow, startCol, startRow - row, startCol, board, queenMoves)){
                 break;
             }
         }
 
         // move up-right
-        for (int i = 0; startRow - i >= 0 && startCol + i < board.getBoardSize(); i++) {
-            if (!addQueenMoveIfValid(startRow, startCol, startRow - i, startCol + i, board, queenMoves)) {
-                break;
-            }
-        }
+        // for (int i = 0; startRow - i >= 0 && startCol + i < board.getBoardSize(); i++) {
+        //     if (!addQueenMoveIfValid(startRow, startCol, startRow - i, startCol + i, board, queenMoves)) {
+        //         break;
+        //     }
+        // }
 
-        // move up-left
-        for (int i = 0; startRow - i >= 0 && startCol - i >= 0; i++) {
-            if (!addQueenMoveIfValid(startRow, startCol, startRow - i, startCol - i, board, queenMoves)) {
-                break;
-            }
-        }
+        // // move up-left
+        // for (int i = 0; startRow - i >= 0 && startCol - i >= 0; i++) {
+        //     if (!addQueenMoveIfValid(startRow, startCol, startRow - i, startCol - i, board, queenMoves)) {
+        //         break;
+        //     }
+        // }
 
-        // move down-right
-        for (int i = 0; startRow + i < board.getBoardSize() && startCol + i < board.getBoardSize(); i++) {
-            if (!addQueenMoveIfValid(startRow, startCol, startRow + i, startCol + i, board, queenMoves)) {
-                break;
-            }
-        }
+        // // move down-right
+        // for (int i = 0; startRow + i < board.getBoardSize() && startCol + i < board.getBoardSize(); i++) {
+        //     if (!addQueenMoveIfValid(startRow, startCol, startRow + i, startCol + i, board, queenMoves)) {
+        //         break;
+        //     }
+        // }
 
-        // move down-left
-        for (int i = 0; startRow + i < board.getBoardSize() && startCol - i >= 0; i++) {
-            if (!addQueenMoveIfValid(startRow, startCol, startRow + i, startCol - i, board, queenMoves)) {
-                break;
-            }
-        }
+        // // move down-left
+        // for (int i = 0; startRow + i < board.getBoardSize() && startCol - i >= 0; i++) {
+        //     if (!addQueenMoveIfValid(startRow, startCol, startRow + i, startCol - i, board, queenMoves)) {
+        //         break;
+        //     }
+        // }
 
         // // move up-right
         // for (int i = 1; startRow + i < board.getBoardSize() && startCol + i < board.getBoardSize(); i++) {
@@ -120,60 +120,60 @@ public class ActionFactory {
         // arrow will have same logic as queen move 
 
         //shoot up
-        for (int row = 0; startRow + row < board.getBoardSize(); row++){
-            if (!addArrowMoveIfValid(startRow, startCol, row, startCol, board, arrowMoves, queenStartRow, queenStartCol)){
+        for (int row = 1; startRow + row < board.getBoardSize(); row++){
+            if (!addArrowMoveIfValid(startRow, startCol, startRow + row, startCol, board, arrowMoves, queenStartRow, queenStartCol)){
                 break;
             }
         }
 
         // shoot down
-        for (int row = 0; startRow - row >= 0; row++){
-            if (!addArrowMoveIfValid(startRow, startCol, row, startCol, board, arrowMoves, queenStartRow, queenStartCol)){
+        for (int row = 1; startRow - row >= 0; row++){
+            if (!addArrowMoveIfValid(startRow, startCol, startRow - row, startCol, board, arrowMoves, queenStartRow, queenStartCol)){
                 break;
             }
         }
 
         // shoot right
-        for (int col = 0; startCol + col < board.getBoardSize(); col++){
-            if (!addArrowMoveIfValid(startRow, startCol, startRow, col, board, arrowMoves, queenStartRow, queenStartCol)){
+        for (int col = 1; startCol + col < board.getBoardSize(); col++){
+            if (!addArrowMoveIfValid(startRow, startCol, startRow, startCol + col, board, arrowMoves, queenStartRow, queenStartCol)){
                 break;
             }
         }
 
         // shoot left
-        for (int col = 0; startCol - col >= 0; col++){
-            if (!addArrowMoveIfValid(startRow, startCol, startRow, col, board, arrowMoves, queenStartRow, queenStartCol)){
+        for (int col = 1; startCol - col >= 0; col++){
+            if (!addArrowMoveIfValid(startRow, startCol, startRow, startCol - col, board, arrowMoves, queenStartRow, queenStartCol)){
                 break;
             }
         }
 
         // shoot up-right
-        for (int i = 0; startRow - i >= 0 && startCol + i < board.getBoardSize(); i++) {
-            if (!addArrowMoveIfValid(startRow, startCol, startRow - i, startCol + i, board, arrowMoves, queenStartRow, queenStartCol)) {
-                break;
-            }
-        }
+        // for (int i = 0; startRow - i >= 0 && startCol + i < board.getBoardSize(); i++) {
+        //     if (!addArrowMoveIfValid(startRow, startCol, startRow - i, startCol + i, board, arrowMoves, queenStartRow, queenStartCol)) {
+        //         break;
+        //     }
+        // }
 
-        // shoot up-left
-        for (int i = 0; startRow - i >= 0 && startCol - i >= 0; i++) {
-            if (!addArrowMoveIfValid(startRow, startCol, startRow - i, startCol - i, board, arrowMoves, queenStartRow, queenStartCol)) {
-                break;
-            }
-        }
+        // // shoot up-left
+        // for (int i = 0; startRow - i >= 0 && startCol - i >= 0; i++) {
+        //     if (!addArrowMoveIfValid(startRow, startCol, startRow - i, startCol - i, board, arrowMoves, queenStartRow, queenStartCol)) {
+        //         break;
+        //     }
+        // }
 
-        // shoot down-right
-        for (int i = 0; startRow + i < board.getBoardSize() && startCol + i < board.getBoardSize(); i++) {
-            if (!addArrowMoveIfValid(startRow, startCol, startRow + i, startCol + i, board, arrowMoves, queenStartRow, queenStartCol)) {
-                break;
-            }
-        }
+        // // shoot down-right
+        // for (int i = 0; startRow + i < board.getBoardSize() && startCol + i < board.getBoardSize(); i++) {
+        //     if (!addArrowMoveIfValid(startRow, startCol, startRow + i, startCol + i, board, arrowMoves, queenStartRow, queenStartCol)) {
+        //         break;
+        //     }
+        // }
 
-        // shoot down-left
-        for (int i = 0; startRow + i < board.getBoardSize() && startCol - i >= 0; i++) {
-            if (!addArrowMoveIfValid(startRow, startCol, startRow + i, startCol - i, board, arrowMoves, queenStartRow, queenStartCol)) {
-                break;
-            }
-        }
+        // // shoot down-left
+        // for (int i = 0; startRow + i < board.getBoardSize() && startCol - i >= 0; i++) {
+        //     if (!addArrowMoveIfValid(startRow, startCol, startRow + i, startCol - i, board, arrowMoves, queenStartRow, queenStartCol)) {
+        //         break;
+        //     }
+        // }
 
         // // shoot up-right
         // for (int i = 1; startRow + i < board.getBoardSize() && startCol + i < board.getBoardSize(); i++) {
@@ -207,7 +207,7 @@ public class ActionFactory {
     }
 
     private static boolean addQueenMoveIfValid(int startRow, int startCol, int endRow, int endCol, Board board, List<QueenMove> queenMoves) {
-    if (endRow >= board.getBoardSize() || endCol >= board.getBoardSize() || endRow < 0 || endCol < 0) {
+    if (board.getPieceAt(endRow, endCol) != 0 || endRow >= board.getBoardSize() || endCol >= board.getBoardSize() || endRow < 0 || endCol < 0) {
         return false;
     }
     if (startRow == endRow && startCol == endCol) {
@@ -224,10 +224,10 @@ private static boolean addArrowMoveIfValid(int startRow, int startCol, int endRo
     if (endRow >= board.getBoardSize() || endCol >= board.getBoardSize() || endRow < 0 || endCol < 0) {
         return false;
     }
-    if (startRow == endRow && startCol == endCol) {
-        return true;
-    }
-    if (board.getPieceAt(endRow, endCol) == 0 && (endRow != queenStartRow || endCol != queenStartCol)) {
+    // if (startRow == endRow && startCol == endCol) {
+    //     return true;
+    // }
+    if (board.getPieceAt(endRow, endCol) == 0 || (endRow == queenStartRow && endCol == queenStartCol)) {
         arrowMoves.add(new ArrowShot(startRow, startCol, endRow, endCol));
         return true;
     }
