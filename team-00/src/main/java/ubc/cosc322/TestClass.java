@@ -39,9 +39,13 @@ public class TestClass{
         System.out.println(testClass.toString(testResult));
     
     }
+    
+    //empty constructor
+    public TestClass(){
+
+    }
 
     private void startGame(TestPlayer testPlayer1, TestPlayer testPlayer2){
-        System.out.println("Test Game Start:");
         board = new Board(); //get new board
         makeMove(testPlayer1, testPlayer2);
     }
