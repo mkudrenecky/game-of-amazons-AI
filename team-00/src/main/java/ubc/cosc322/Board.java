@@ -13,6 +13,21 @@ public class Board {
 
     public int[][] board;
 
+
+    public Board(){
+        this.board = new int[][]{
+            { 0, 0, 0, WHITE_QUEEN, 0, 0, WHITE_QUEEN, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0,	0 },
+                    { WHITE_QUEEN, 0, 0, 0, 0, 0, 0, 0, 0, WHITE_QUEEN },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0,	0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0,	0 },
+                    { BLACK_QUEEN, 0, 0, 0, 0, 0, 0, 0, 0, BLACK_QUEEN },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0,	0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0,	0 },
+                    { 0, 0, 0, BLACK_QUEEN, 0, 0, BLACK_QUEEN, 0, 0, 0 } };
+    }
+
     public Board(ArrayList<Integer> gameState){
         this.board =  new int[BOARD_SIZE][BOARD_SIZE];
         int index=12;

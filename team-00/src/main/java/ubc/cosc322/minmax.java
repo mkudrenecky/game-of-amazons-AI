@@ -23,9 +23,10 @@ public class MinMax {
     }
 
     private static MinMax minMaxSearch(Board board, int depth, int alpha, int beta, int maximizingPlayer, int currentPlayer, int heuristic) {
+        // currentPlayer.incrementNodes();
         List<Action> legalActions = ActionFactory.getActions(board, currentPlayer);
         if (depth == 0 || legalActions.isEmpty()) {
-            return new MinMax (evaluate(board, maximizingPlayer), null);
+            return new MinMax (evaluate(board, maximizingPlayer, heuristic ), null);
         }
 
         Action bestAction = null;
@@ -36,7 +37,7 @@ public class MinMax {
                 Board nextBoard = new Board(board, action);
                 // System.out.println(nextBoard.boardToString());
                 // System.out.println(board.boardToString());
-                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer)).evaluation;
+                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer), heuristic).evaluation;
                 if (eval > maxEval) {
                     maxEval = eval;
                     bestAction = action;
@@ -53,7 +54,7 @@ public class MinMax {
                 Board nextBoard = new Board(board, action);
                 // System.out.println(nextBoard.boardToString());
                 // System.out.println(board.boardToString());
-                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer)).evaluation;
+                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer), heuristic).evaluation;
                 if (eval < minEval) {
                     minEval = eval;
                     bestAction = action;
@@ -63,6 +64,7 @@ public class MinMax {
                     break;
                 }
             }
+            System.out.println(minEval);
             return new MinMax(minEval, bestAction);
         }
     }
@@ -70,14 +72,14 @@ public class MinMax {
     private static int evaluate(Board board, int player, int heuristic){
         int evaluation = Integer.MIN_VALUE;
         switch(heuristic){
-            case 0:
-                evalutation = randomHeuristic(board, player);
-                break;
+            // case 0:
+            //     evaluation = randomHeuristic(board, (byte) player);
+            //     break;
             case 1:
-                evaluation = mobilityHeuristic(board, player);
+                evaluation = mobilityHeuristic(board, (byte) player);
                 break;
             case 2:
-                evaluation = territoryHeuristic(board, player);
+                evaluation = territoryHeuristic(board, (byte) player);
                 break;
             case 3:
                 //mobility-territory heuristic

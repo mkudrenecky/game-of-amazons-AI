@@ -5,11 +5,15 @@ public class TestPlayer {
     private boolean isBlack;
     private String heuristicName;
     private int heuristicType;
+    private int depth;
+    private int nodesExplored;
+    private boolean winner;
 
-    public TestPlayer(String playerName, boolean isBlack, int heuristicType){
+    public TestPlayer(String playerName, boolean isBlack, int heuristicType, int depth){
         this.playerName = playerName;
         this.isBlack = isBlack;
         this.heuristicType = heuristicType;
+        this.depth = depth;
         setHeuristicName();
     }
     
@@ -42,9 +46,20 @@ public class TestPlayer {
     public int getHeuristicType(){
         return this.heuristicType;
     }
-
+    public int getDepth(){
+        return this.depth;
+    }
+    public boolean getWinner(){
+        return this.winner;
+    }
+    public void setWinner(boolean winner){
+        this.winner = winner;
+    }
+    public void incrementNodes(){
+        nodesExplored++;
+    }
 
     public String toString(){
-        return "Player type: " + heuristicName + " Colour: " + (isBlack ? "Black" : "White"); 
+        return "Player Name: " + playerName + " Winner?: " + winner + ", Player type: " + heuristicName + ", Colour: " + (isBlack ? "Black" : "White") + ", Depth: " + depth; 
     }
 }

@@ -7,64 +7,121 @@ import java.util.Random;
 
 import javax.swing.plaf.nimbus.State;
 
-import sfs2x.client.entities.Room;
-import ygraph.ai.smartfox.games.BaseGameGUI;
-import ygraph.ai.smartfox.games.GameClient;
-import ygraph.ai.smartfox.games.GameMessage;
-import ygraph.ai.smartfox.games.GamePlayer;
-import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
-import ygraph.ai.smartfox.games.amazons.HumanPlayer;
 
 public class TestClass{
     
     private static int iterations = 5;
-    private static TestPlayer testPlayer1;
-    private static TestPlayer testPlayer2;
+    // private TestPlayer testPlayer1;
+    // private TestPlayer testPlayer2;
     private Action action;
     private Board board;
-    private static ArrayList<TestResult> testResult;
-    private int gameWon;
+    // private ArrayList<TestResult> testResult;
+    private boolean gameWon;
 
 
     public static void main(String[] args) {
-        testPlayer1 = new TestPlayer("Jeff", true, 1);
-        testPlayer2 = new TestPlayer("Jennifer", false, 2);
+        TestClass testClass = new TestClass();
+        TestPlayer testPlayer1 = new TestPlayer("Jeff", false, 1, 1);
+        TestPlayer testPlayer2 = new TestPlayer("Jennifer", true, 2,1);
         
-        testResult = new ArrayList<TestResult>();
+        ArrayList<TestResult> testResult = new ArrayList<TestResult>();
         
         for(int i = 0; i < iterations; i++){
-            int gameWinner = startGame();
-
-    
-            testResult.add(new TestResult(testPlayer1.getHeuristicName(), testPlayer2.getHeuristicName(), gameWinner));
-
+            testClass.startGame(testPlayer1, testPlayer2);
+            
+            testResult.add(new TestResult(testPlayer1, testPlayer2));
         }
+        System.out.println(testClass.toString(testResult));
     
     }
 
-    private static int startGame(){
+    private void startGame(TestPlayer testPlayer1, TestPlayer testPlayer2){
         System.out.println("Test Game Start:");
-        // board = new Board(); //get new board
-        nextTurn();
-
-        return -1;
-
+        board = new Board(); //get new board
+        makeMove(testPlayer1, testPlayer2);
     }
 
-    private void makeMove(){
+    private void makeMove(TestPlayer testPlayer1, TestPlayer testPlayer2){
+        TestPlayer currentPlayer = (!testPlayer1.getIsBlack() ? testPlayer1 : testPlayer2);
         while(!gameWon){
-            makeMinMaxMove()
+            System.out.println("Making a move for " + currentPlayer.getPlayerName());
+            System.out.println(board.boardToString());
+            makeMinMaxMove(currentPlayer);
+            checkWin(currentPlayer);
+            currentPlayer = (testPlayer2 == currentPlayer ? testPlayer1 : testPlayer2);
+            checkWin(currentPlayer);
         }
     } 
 
+    private void checkWin(TestPlayer player){
+        if(MinMax.findBestAction(board, player.getDepth(), player.getIsBlack() ? 1 : 2, player.getHeuristicType()) == null){
+            gameWon = true;
+            player.setWinner(true);
+        }
+    }
 
     private void makeMinMaxMove(TestPlayer player){
-        int depth = 2;
-        Action bestAction = MinMax.findBestAction(board, depth, player.getIsBlack(), player.getHeuristicType());
+        Action bestAction = MinMax.findBestAction(board, player.getDepth(), player.getIsBlack() ? 1 : 2, player.getHeuristicType());
         board.updateBoardState(bestAction, board);
     }
 
+    public String toString(ArrayList<TestResult> testResults){
+        String result = "";
+        int player1Wins = 0;
+        int player2Wins = 0;
+        int count = 0;
+        for(TestResult testResult : testResults){
+            count++;
+            result = result + "\nGame " + count + ":\n";
+            result = result + "___________________________________\n";
+            if(testResult.getTestPlayer1().getWinner())
+                player1Wins++;
+            if(testResult.getTestPlayer2().getWinner())
+                player2Wins++;
+        }
+        result = result + "___________________________________\n";
+        result = result + "Wins\n";
 
+        result = result + "Player1: " + player1Wins + "\n";
+        result = result + "Player2: " + player2Wins + "\n";
+        //add concat to string with results summary
+        return result;
+    }
 
+    public Action findMove(Board oldBoard, Board newBoard){
+        QueenMove queenMove = new QueenMove();
+        ArrowShot arrowShot = new ArrowShot();
+        for(int i = 0; i < board.getBoardSize(); i++){
+            for(int j = 0; j < board.getBoardSize(); j++){
+                int tileChange = newBoard.getPieceAt(i, j) - oldBoard.getPieceAt(i, j);
+                if((tileChange == 1 || tileChange == 2) && oldBoard.getPieceAt(i, j) == 0){
+                    queenMove.setEndCol(i);
+                    queenMove.setEndRow(j);
+                }
+                if((tileChange == 1 || tileChange == 2) && (oldBoard.getPieceAt(i, j) == 1 || oldBoard.getPieceAt(i, j) == 2)){
+                    queenMove.setStartCol(i);
+                    queenMove.setStartRow(j);
+                    arrowShot.setEndCol(i);
+                    arrowShot.setEndRow(j);
+                }
+                if(tileChange == 3){
+                    arrowShot.setEndCol(i);
+                    arrowShot.setEndRow(j);  
+                }
+                if(tileChange == -1 || tileChange == -2){
+                    queenMove.setStartCol(i);
+                    queenMove.setStartRow(j);
+                }
+            }
+        }
+        arrowShot.setStartCol(queenMove.getEndCol());
+        arrowShot.setStartRow(queenMove.getEndRow());
+        return new Action(queenMove, arrowShot);
+    }
+
+    public boolean checkIfMoveValid(Action action, int player, Board board){
+        ArrayList<Action> legalMoves = ActionFactory.getActions(board, player);
+        return legalMoves.contains(action);
+    }
 
 }
