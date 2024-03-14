@@ -42,4 +42,8 @@ public class QueenMove {
     public void setEndRow(int x){
         this.endRow = x;
     }
+
+    public boolean equals(QueenMove queenMove){
+        return (this.getEndCol() == queenMove.getEndCol() && this.getEndRow() == queenMove.getEndRow() && this.getStartCol() == queenMove.getStartCol() && this.getStartRow() == queenMove.getStartRow());
+    }
 }

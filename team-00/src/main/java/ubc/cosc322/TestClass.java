@@ -43,11 +43,14 @@ public class TestClass{
 
     private void makeMove(TestPlayer testPlayer1, TestPlayer testPlayer2){
         TestPlayer currentPlayer = (!testPlayer1.getIsBlack() ? testPlayer1 : testPlayer2);
+        Board oldBoard = null;
         while(!gameWon){
             System.out.println("Making a move for " + currentPlayer.getPlayerName());
-            System.out.println(board.boardToString());
+            // System.out.println(board.boardToString());
+            oldBoard = new Board(this.board);
             makeMinMaxMove(currentPlayer);
             checkWin(currentPlayer);
+            System.out.println("Legal move? " + checkIfMoveValid(findMove(oldBoard, this.board), (currentPlayer.getIsBlack() ? 1 : 2), this.board));
             currentPlayer = (testPlayer2 == currentPlayer ? testPlayer1 : testPlayer2);
             checkWin(currentPlayer);
         }
@@ -121,7 +124,15 @@ public class TestClass{
 
     public boolean checkIfMoveValid(Action action, int player, Board board){
         ArrayList<Action> legalMoves = ActionFactory.getActions(board, player);
-        return legalMoves.contains(action);
+        boolean legal = false;
+        for(Action legalMove : legalMoves){
+            legal = (legalMove.equals(action));
+            if(legal)
+                break;
+        }
+        System.out.println("Action in legal actions: " + a);
+
+        return legal;
     }
 
 }

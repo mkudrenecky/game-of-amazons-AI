@@ -34,4 +34,16 @@ public class Action {
         return map;
     }
 
+    public boolean equals(Action action){
+        return (action.getArrowShot().equals(this.getArrowShot()) && action.getQueenMove().equals(this.getQueenMove()));
+    }
+    public String toString(){
+        return "\nQueen:" 
+            + "\nStart Col: " + queenMove.getStartCol() + " Start Row: " + queenMove.getStartRow()
+            + "\nEnd Col: " + queenMove.getEndCol() + " End Row: " + queenMove.getStartCol()
+            + "\nArrow:" 
+            + "\nStart Col: " + arrowShot.getStartCol() + "Start Row: " + arrowShot.getStartRow()
+            + "\nEnd Col: " + arrowShot.getEndCol() + " End Row: " + arrowShot.getStartCol();
+    }
+
 }

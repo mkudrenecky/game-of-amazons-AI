@@ -42,4 +42,7 @@ public class ArrowShot {
     public void setEndRow(int x){
         this.endRow = x;
     }
+    public boolean equals(ArrowShot arrowShot){
+        return (this.getEndCol() == arrowShot.getEndCol() && this.getEndRow() == arrowShot.getEndRow() && this.getStartCol() == arrowShot.getStartCol() && this.getStartRow() == arrowShot.getStartRow());
+    }
 }
