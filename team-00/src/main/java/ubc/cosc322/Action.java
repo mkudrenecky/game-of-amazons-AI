@@ -3,6 +3,7 @@ package ubc.cosc322;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
@@ -16,7 +17,32 @@ public class Action {
         this.queenMove = queenMove;
         this.arrowShot = arrowShot;
     }
-
+    
+    public Action(Map<String, Object> serverResponse) {
+        System.out.println("Receiving move from server...");
+    
+        List<Integer> queenCurrPos = (List<Integer>) serverResponse.get(AmazonsGameMessage.QUEEN_POS_CURR);
+        List<Integer> queenNextPos = (List<Integer>) serverResponse.get(AmazonsGameMessage.QUEEN_POS_NEXT);
+        List<Integer> arrowPos = (List<Integer>) serverResponse.get(AmazonsGameMessage.ARROW_POS);
+    
+        // Create QueenMove object
+        QueenMove queenMove = new QueenMove(
+            queenCurrPos.get(0) - 1, 
+            queenCurrPos.get(1) - 1, 
+            queenNextPos.get(0) - 1, 
+            queenNextPos.get(1) - 1
+        );
+    
+        // Create ArrowShot object
+        ArrowShot arrowShot = new ArrowShot(
+            queenCurrPos.get(0) - 1, 
+            queenCurrPos.get(1) - 1, 
+            arrowPos.get(0) - 1, 
+            arrowPos.get(1) - 1
+        );
+        this.queenMove = queenMove;
+        this.arrowShot = arrowShot;
+    }
     public QueenMove getQueenMove() {
         return queenMove;
     }
@@ -40,10 +66,10 @@ public class Action {
     public String toString(){
         return "\nQueen:" 
             + "\nStart Col: " + queenMove.getStartCol() + " Start Row: " + queenMove.getStartRow()
-            + "\nEnd Col: " + queenMove.getEndCol() + " End Row: " + queenMove.getStartCol()
+            + "\nEnd Col: " + queenMove.getEndCol() + " End Row: " + queenMove.getEndRow()
             + "\nArrow:" 
-            + "\nStart Col: " + arrowShot.getStartCol() + "Start Row: " + arrowShot.getStartRow()
-            + "\nEnd Col: " + arrowShot.getEndCol() + " End Row: " + arrowShot.getStartCol();
+            + "\nStart Col: " + arrowShot.getStartCol() + " Start Row: " + arrowShot.getStartRow()
+            + "\nEnd Col: " + arrowShot.getEndCol() + " End Row: " + arrowShot.getEndRow();
     }
 
 }

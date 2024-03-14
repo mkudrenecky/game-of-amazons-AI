@@ -4,6 +4,7 @@ import java.util.*;
 public class MinMax {
     public int evaluation;
     public Action bestAction;
+    private int nodeCount = 0;
 
     public MinMax(int evaluation, Action bestAction) {
         this.evaluation = evaluation;
@@ -19,11 +20,13 @@ public class MinMax {
 
         Action bestAction = result.bestAction;
 
+        // System.out.println(new MinMax(0,bestAction).getNodeCount());
+
         return bestAction;
     }
 
     private static MinMax minMaxSearch(Board board, int depth, int alpha, int beta, int maximizingPlayer, int currentPlayer, int heuristic) {
-        // currentPlayer.incrementNodes();
+        // setNodeCount(getNodeCount()++);
         List<Action> legalActions = ActionFactory.getActions(board, currentPlayer);
         if (depth == 0 || legalActions.isEmpty()) {
             return new MinMax (evaluate(board, maximizingPlayer, heuristic ), null);
@@ -127,6 +130,13 @@ public class MinMax {
 
     private static int getOpponent(int player) {
         return player == 1 ? 2 : 1;
+    }
+
+    private int getNodeCount(){
+        return this.nodeCount;
+    }
+    private void setNodeCount(int nodeCount){
+        this.nodeCount = nodeCount;
     }
 }
     /*MINIMAX(s) =

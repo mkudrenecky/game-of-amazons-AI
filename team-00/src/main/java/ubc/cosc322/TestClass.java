@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.swing.plaf.nimbus.State;
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
+import ygraph.ai.smartfox.games.BaseGameGUI;
 
 
 public class TestClass{
@@ -19,10 +22,12 @@ public class TestClass{
     private boolean gameWon;
 
 
+
+
     public static void main(String[] args) {
         TestClass testClass = new TestClass();
-        TestPlayer testPlayer1 = new TestPlayer("Jeff", false, 1, 1);
-        TestPlayer testPlayer2 = new TestPlayer("Jennifer", true, 2,1);
+        TestPlayer testPlayer1 = new TestPlayer("Jeff", false, 2, 1);
+        TestPlayer testPlayer2 = new TestPlayer("Jennifer", true, 1,1);
         
         ArrayList<TestResult> testResult = new ArrayList<TestResult>();
         
@@ -41,17 +46,23 @@ public class TestClass{
         makeMove(testPlayer1, testPlayer2);
     }
 
+    private void testActionFactory(){
+
+    }
+
     private void makeMove(TestPlayer testPlayer1, TestPlayer testPlayer2){
         TestPlayer currentPlayer = (!testPlayer1.getIsBlack() ? testPlayer1 : testPlayer2);
         Board oldBoard = null;
         while(!gameWon){
-            System.out.println("Making a move for " + currentPlayer.getPlayerName());
+            System.out.println("Making a move for " + currentPlayer.getPlayerName() + " " + (currentPlayer.getIsBlack()? 1 : 2 ));
             // System.out.println(board.boardToString());
             oldBoard = new Board(this.board);
             makeMinMaxMove(currentPlayer);
             checkWin(currentPlayer);
-            System.out.println("Legal move? " + checkIfMoveValid(findMove(oldBoard, this.board), (currentPlayer.getIsBlack() ? 1 : 2), this.board));
+            // System.out.println(findMove(oldBoard, board).toString());
             currentPlayer = (testPlayer2 == currentPlayer ? testPlayer1 : testPlayer2);
+            System.out.println("Legal move? " + checkIfMoveValid(findMove(oldBoard, this.board), (currentPlayer.getIsBlack() ? 2 : 1), oldBoard));
+
             checkWin(currentPlayer);
         }
     } 
@@ -73,6 +84,9 @@ public class TestClass{
         int player1Wins = 0;
         int player2Wins = 0;
         int count = 0;
+        System.out.println(testResults.get(0).getTestPlayer1().toString());
+        System.out.println(testResults.get(0).getTestPlayer2().toString());
+
         for(TestResult testResult : testResults){
             count++;
             result = result + "\nGame " + count + ":\n";
@@ -94,26 +108,31 @@ public class TestClass{
     public Action findMove(Board oldBoard, Board newBoard){
         QueenMove queenMove = new QueenMove();
         ArrowShot arrowShot = new ArrowShot();
-        for(int i = 0; i < board.getBoardSize(); i++){
-            for(int j = 0; j < board.getBoardSize(); j++){
-                int tileChange = newBoard.getPieceAt(i, j) - oldBoard.getPieceAt(i, j);
-                if((tileChange == 1 || tileChange == 2) && oldBoard.getPieceAt(i, j) == 0){
-                    queenMove.setEndCol(i);
-                    queenMove.setEndRow(j);
+        //row = i, col = j
+        for(int row = 0; row < board.getBoardSize(); row++){
+            for(int col = 0; col < board.getBoardSize(); col++){
+                int tileChange = newBoard.getPieceAt(row, col) - oldBoard.getPieceAt(row, col);
+                //case queen end on empty pos
+                if((tileChange == 1 || tileChange == 2) && oldBoard.getPieceAt(row, col) == 0){
+                    queenMove.setEndCol(col);
+                    queenMove.setEndRow(row);
                 }
-                if((tileChange == 1 || tileChange == 2) && (oldBoard.getPieceAt(i, j) == 1 || oldBoard.getPieceAt(i, j) == 2)){
-                    queenMove.setStartCol(i);
-                    queenMove.setStartRow(j);
-                    arrowShot.setEndCol(i);
-                    arrowShot.setEndRow(j);
+                //case queen leave and shoot arrow on start pos
+                if((tileChange == 1 || tileChange == 2) && (oldBoard.getPieceAt(row, col) == 1 || oldBoard.getPieceAt(row, col) == 2)){
+                    queenMove.setStartCol(col);
+                    queenMove.setStartRow(row);
+                    arrowShot.setEndCol(col);
+                    arrowShot.setEndRow(row);
                 }
-                if(tileChange == 3){
-                    arrowShot.setEndCol(i);
-                    arrowShot.setEndRow(j);  
+                //case arrow end pos
+                if(tileChange == 3){ 
+                    arrowShot.setEndCol(col);
+                    arrowShot.setEndRow(row);  
                 }
-                if(tileChange == -1 || tileChange == -2){
-                    queenMove.setStartCol(i);
-                    queenMove.setStartRow(j);
+                //case queen leave
+                if((tileChange == -1 && oldBoard.getPieceAt(row, col) ==1) || (tileChange == -2 && oldBoard.getPieceAt(row, col) ==2)){
+                    queenMove.setStartCol(col);
+                    queenMove.setStartRow(row);
                 }
             }
         }
@@ -123,6 +142,7 @@ public class TestClass{
     }
 
     public boolean checkIfMoveValid(Action action, int player, Board board){
+        // System.out.println("Checking if move valid for " + player);
         ArrayList<Action> legalMoves = ActionFactory.getActions(board, player);
         boolean legal = false;
         for(Action legalMove : legalMoves){
@@ -130,8 +150,6 @@ public class TestClass{
             if(legal)
                 break;
         }
-        System.out.println("Action in legal actions: " + a);
-
         return legal;
     }
 

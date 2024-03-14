@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 public class TestResult {
     private TestPlayer testPlayer1;
     private TestPlayer testPlayer2;
+    private boolean illegalMoves = false;
 
     
     public TestResult(TestPlayer testPlayer1, TestPlayer testPlayer2){
@@ -19,6 +20,13 @@ public class TestResult {
     public TestPlayer getTestPlayer2(){
         return testPlayer2;
     }
+    public boolean getIllegalMoves(){
+        return this.illegalMoves;
+    }
+    public void setIllegalMove(boolean illegal){
+        this.illegalMoves = illegal;
+    }
+
     public String toString(){
         return testPlayer1.toString() + "\n" + testPlayer2.toString();
     }
