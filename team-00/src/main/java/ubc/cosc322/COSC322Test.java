@@ -34,7 +34,6 @@ public class COSC322Test extends GamePlayer {
 	private int player;
 	private Action action;
 	private static TestClass testClass;
-	// private ActionFactory actionFactory;
 	private boolean isBlack;
    
 
@@ -44,13 +43,20 @@ public class COSC322Test extends GamePlayer {
 	 * @param args for name and passwd (current, any string would work)
 	 */
 	public static void main(String[] args) {
+
 		GamePlayer player;
+        GamePlayer player2;
 		testClass = new TestClass();
-		GamePlayer player2;
+		
 		// COSC322Test player = new COSC322Test(args[0], args[1]);
+
+        // creates two players to have them play eachother, launches a GUI for each player
 		player = new COSC322Test("aaa", "123");
 		player2 = new COSC322Test("sam", "456");
+
+        // code for human player
 		// player = new HumanPlayer();
+
 		player.connect();
 		player2.connect();
 
@@ -100,57 +106,73 @@ public class COSC322Test extends GamePlayer {
 
 		switch (messageType) {
 			case GameMessage.GAME_ACTION_START:
-				System.out.print("Lets go");
-				// Black goes first
+				
+				// Black goes first, check if we are black
 				isBlack = msgDetails.get(AmazonsGameMessage.PLAYER_BLACK).equals(getGameClient().getUserName());
+
+                // set our player value
 				player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
+
+                // if we are black, we make the first move
 				if (isBlack){
 					System.out.print("Hello Black");
 				    makeMinMaxMove();
+
+                    // display the board after opening move
+                    System.out.println("BOARD AFTER OPENING BLACK MOVE:");
+				    System.out.println(board.boardToString());
                 }
 
 				System.out.println(board.boardToString());
 				break;
 			case GameMessage.GAME_STATE_BOARD:
+                // this is the opening state of the game of the game
 				System.out.println("Message Details: " + msgDetails);
-			
+                
+                // set the gui to the starting state
 				getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
+
+                // instantiate our board to the starting state from the server
 				board = new Board((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
+
+                // display the initial board for sanity
                 System.out.println("Initial Board:");
 				System.out.println(board.boardToString());
 				
 				break;
 			case GameMessage.GAME_ACTION_MOVE:
-				// getGameGUI().updateGameState(msgDetails);
+				// add in some sanity checks to visualize the board, there are a lot of sanity checks here
                 System.out.println("old board:");
                 System.out.println(board.boardToString());
+
+                // create a copy of the current board and display
                 Board oldBoard = new Board(board);
                 System.out.println("old board v2:");
                 System.out.println(oldBoard.boardToString());
+
+                // get the opponent action from the server and update the board
                 Action opAction = new Action(msgDetails);
                 board.updateBoardState(opAction);
+
+                // display the board reflecting opponent move
                 System.out.println("new board:");
                 System.out.println(board.boardToString());
-                Action opponentAction = testClass.findMove(oldBoard, board);
-                // board.updateBoardState(opponentAction, board);
-				System.out.println("Opponent move legal? " + testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard));
-				if (!testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard)){
-                    System.exit(0);
 
+                // test the opponent move against the validator
+                Action opponentAction = testClass.findMove(oldBoard, board);
+				System.out.println("Opponent move legal? " + testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard));
+
+                // shut down the game if opponent makes an illegal move
+				if (!testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard)){
+                System.out.println("Opponent has made an illegal move!");
+                    System.exit(0);
                 }
-				// board.updateBoardState(opAction, board);
-				// QueenMove OPqueenMove = opAction.getQueenMove();
-				// ArrowShot OParrowShot = opAction.getArrowShot();
-				// if (!isMoveLegal(OPqueenMove, OParrowShot)) {
-				// 	System.out.println("Illegal move made: Queen move from (" + OPqueenMove.getStartRow() + ", "
-				// 			+ OPqueenMove.getStartCol() + ") to (" + OPqueenMove.getEndRow() + ", "
-				// 			+ OPqueenMove.getEndCol() + ") and arrow shot from (" + OParrowShot.getStartRow() + ", "
-				// 			+ OParrowShot.getStartCol() + ") to (" + OParrowShot.getEndRow() + ", "
-				// 			+ OParrowShot.getEndCol() + ")");
-				// 	System.exit(1);
-				// }
+		
+                // update the gui if all checks pass
 				getGameGUI().updateGameState(msgDetails);
-				// board.updateBoardState(opAction, board);
+
+                // make our move
+                // currently set up to play against white making random moves
 				if (isBlack) {
 					// makeRandomMove();
 					makeMinMaxMove();
@@ -159,9 +181,11 @@ public class COSC322Test extends GamePlayer {
 					// makeMinMaxMove();
 				}
 
-				// makeRandomMove();System.out.println("old board:");
+				// Additional visualization to ensure board is as expected
                 System.out.println("BOARD AFTER MOVE:");
 				System.out.println(board.boardToString());
+
+                // end game condition checking
 				if (ActionFactory.getActions(board, player == Board.BLACK_QUEEN ? Board.WHITE_QUEEN : Board.BLACK_QUEEN)
 						.size() == 0) {
 					System.out.println("We(" + player + ") won");
@@ -180,14 +204,17 @@ public class COSC322Test extends GamePlayer {
 	}
 
 	private void makeRandomMove() {
-		// ArrayList<Action> actions = actionFactory.getActions(board, player);
 		System.out.println("making move for black? " + isBlack);
 		ArrayList<Action> actions = ActionFactory.getActions(board, isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN);
 
 		System.out.println("WE made the actions");
 		Action move = actions.get((int) (Math.random() * actions.size()));
+        if (actions.size() == 0){
+            System.out.println("We("+player+") are out of moves, we lost!! :( :( :( ");
+            System.exit(0);
+        }
 
-		System.out.println("About to send move");
+		System.out.println("About to send random move");
 		getGameClient().sendMoveMessage(move.toServerResponse());
 		getGameGUI().updateGameState(move.toServerResponse());
 
@@ -195,11 +222,15 @@ public class COSC322Test extends GamePlayer {
 	}
 
 	private void makeMinMaxMove() {
-		// will eventually use itertive deepening on a timer, tree will be smaller as
+		// will eventually use iterative deepening on a timer, tree will be smaller as
 		// game progresses
 		int depth = 1;
 		int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
 		Action bestAction = MinMax.findBestAction(board, depth, player, 1);
+        if (bestAction == null){
+            System.out.println("We("+player+") are out of moves, we lost!! :( :( :( ");
+            System.exit(0);
+        }
 
 		System.out.println("making min max move for black? " + isBlack);
 		getGameClient().sendMoveMessage(bestAction.toServerResponse());
