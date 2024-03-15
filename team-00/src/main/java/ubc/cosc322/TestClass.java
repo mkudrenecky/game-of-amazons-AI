@@ -13,7 +13,7 @@ import ygraph.ai.smartfox.games.BaseGameGUI;
 
 public class TestClass{
     
-    private static int iterations = 5;
+    private static int iterations = 1;
     // private TestPlayer testPlayer1;
     // private TestPlayer testPlayer2;
     private Action action;
@@ -26,7 +26,7 @@ public class TestClass{
 
     public static void main(String[] args) {
         TestClass testClass = new TestClass();
-        TestPlayer testPlayer1 = new TestPlayer("Jeff", false, 2, 1);
+        TestPlayer testPlayer1 = new TestPlayer("Jeff", false, 1, 1);
         TestPlayer testPlayer2 = new TestPlayer("Jennifer", true, 1,1);
         
         ArrayList<TestResult> testResult = new ArrayList<TestResult>();
@@ -59,7 +59,7 @@ public class TestClass{
         Board oldBoard = null;
         while(!gameWon){
             System.out.println("Making a move for " + currentPlayer.getPlayerName() + " " + (currentPlayer.getIsBlack()? 1 : 2 ));
-            // System.out.println(board.boardToString());
+            System.out.println(board.boardToString());
             oldBoard = new Board(this.board);
             makeMinMaxMove(currentPlayer);
             checkWin(currentPlayer);
@@ -154,6 +154,7 @@ public class TestClass{
             if(legal)
                 break;
         }
+        System.out.println("is legal?: " + legal);
         return legal;
     }
 

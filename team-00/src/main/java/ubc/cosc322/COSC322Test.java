@@ -47,7 +47,7 @@ public class COSC322Test extends GamePlayer {
 		testClass = new TestClass();
 		// GamePlayer player2;
 		// COSC322Test player = new COSC322Test(args[0], args[1]);
-		player = new COSC322Test("aaa", "123");
+		player = new COSC322Test("sam", "123");
 		// player2 = new COSC322Test("sam", "456");
 		// player = new HumanPlayer();
 		player.connect();
@@ -111,15 +111,18 @@ public class COSC322Test extends GamePlayer {
 				System.out.println(board.boardToString());
 				break;
 			case GameMessage.GAME_STATE_BOARD:
-				System.out.println("Message Details: " + msgDetails);
-				Board oldBoard = board;
+				// System.out.println("Message Details: " + msgDetails);
+				// Board oldBoard = board;
 				getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
 				board = new Board((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
-				Action opponentAction = testClass.findMove(oldBoard, board);
-				System.out.println("Opponent move legal? " + testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard));
-				System.out.println(board.boardToString());
-				// makeMinMaxMove();
+				// System.out.println("Old board:");
+				// System.out.println(oldBoard.boardToString());
+				// System.out.println("New board:");
 				// System.out.println(board.boardToString());
+				// Action opponentAction = testClass.findMove(oldBoard, board);
+				// System.out.println("Opponent move legal? " + testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard));
+				// // makeMinMaxMove();
+				// // System.out.println(board.boardToString());
 				break;
 			case GameMessage.GAME_ACTION_MOVE:
 				// getGameGUI().updateGameState(msgDetails);
@@ -146,6 +149,7 @@ public class COSC322Test extends GamePlayer {
 				}
 
 				// makeRandomMove();
+
 				System.out.println(board.boardToString());
 				if (ActionFactory.getActions(board, player == Board.BLACK_QUEEN ? Board.WHITE_QUEEN : Board.BLACK_QUEEN)
 						.size() == 0) {

@@ -67,7 +67,7 @@ public class MinMax {
                     break;
                 }
             }
-            System.out.println(minEval);
+            // System.out.println(minEval);
             return new MinMax(minEval, bestAction);
         }
     }
