@@ -80,7 +80,7 @@ public class TestClass{
 
     private void makeMinMaxMove(TestPlayer player){
         Action bestAction = MinMax.findBestAction(board, player.getDepth(), player.getIsBlack() ? 1 : 2, player.getHeuristicType());
-        board.updateBoardState(bestAction, board);
+        board.updateBoardState(bestAction);
     }
 
     public String toString(ArrayList<TestResult> testResults){
@@ -113,8 +113,8 @@ public class TestClass{
         QueenMove queenMove = new QueenMove();
         ArrowShot arrowShot = new ArrowShot();
         //row = i, col = j
-        for(int row = 0; row < board.getBoardSize(); row++){
-            for(int col = 0; col < board.getBoardSize(); col++){
+        for(int row = 0; row < newBoard.getBoardSize(); row++){
+            for(int col = 0; col < newBoard.getBoardSize(); col++){
                 int tileChange = newBoard.getPieceAt(row, col) - oldBoard.getPieceAt(row, col);
                 //case queen end on empty pos
                 if((tileChange == 1 || tileChange == 2) && oldBoard.getPieceAt(row, col) == 0){

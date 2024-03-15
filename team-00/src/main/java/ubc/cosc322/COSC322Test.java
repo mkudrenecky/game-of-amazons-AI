@@ -36,6 +36,7 @@ public class COSC322Test extends GamePlayer {
 	private static TestClass testClass;
 	// private ActionFactory actionFactory;
 	private boolean isBlack;
+   
 
 	/**
 	 * The main method
@@ -45,23 +46,23 @@ public class COSC322Test extends GamePlayer {
 	public static void main(String[] args) {
 		GamePlayer player;
 		testClass = new TestClass();
-		// GamePlayer player2;
+		GamePlayer player2;
 		// COSC322Test player = new COSC322Test(args[0], args[1]);
 		player = new COSC322Test("aaa", "123");
-		// player2 = new COSC322Test("sam", "456");
+		player2 = new COSC322Test("sam", "456");
 		// player = new HumanPlayer();
 		player.connect();
-		// player2.connect();
+		player2.connect();
 
 		if (player.getGameGUI() == null) {
 			player.Go();
-			// player2.Go();
+			player2.Go();
 		} else {
 			BaseGameGUI.sys_setup();
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					player.Go();
-					// player2.Go();
+					player2.Go();
 				}
 			});
 		}
@@ -103,30 +104,43 @@ public class COSC322Test extends GamePlayer {
 				// Black goes first
 				isBlack = msgDetails.get(AmazonsGameMessage.PLAYER_BLACK).equals(getGameClient().getUserName());
 				player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
-				if (isBlack)
+				if (isBlack){
 					System.out.print("Hello Black");
-				makeMinMaxMove();
-				// makeRandomMove();
+				    makeMinMaxMove();
+                }
 
 				System.out.println(board.boardToString());
 				break;
 			case GameMessage.GAME_STATE_BOARD:
 				System.out.println("Message Details: " + msgDetails);
-				Board oldBoard = board;
+			
 				getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
 				board = new Board((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
-				Action opponentAction = testClass.findMove(oldBoard, board);
-				System.out.println("Opponent move legal? " + testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard));
+                System.out.println("Initial Board:");
 				System.out.println(board.boardToString());
-				// makeMinMaxMove();
-				// System.out.println(board.boardToString());
+				
 				break;
 			case GameMessage.GAME_ACTION_MOVE:
 				// getGameGUI().updateGameState(msgDetails);
-				Action opAction = new Action(msgDetails);
+                System.out.println("old board:");
+                System.out.println(board.boardToString());
+                Board oldBoard = new Board(board);
+                System.out.println("old board v2:");
+                System.out.println(oldBoard.boardToString());
+                Action opAction = new Action(msgDetails);
+                board.updateBoardState(opAction);
+                System.out.println("new board:");
+                System.out.println(board.boardToString());
+                Action opponentAction = testClass.findMove(oldBoard, board);
+                // board.updateBoardState(opponentAction, board);
+				System.out.println("Opponent move legal? " + testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard));
+				if (!testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard)){
+                    System.exit(0);
+
+                }
 				// board.updateBoardState(opAction, board);
-				QueenMove OPqueenMove = opAction.getQueenMove();
-				ArrowShot OParrowShot = opAction.getArrowShot();
+				// QueenMove OPqueenMove = opAction.getQueenMove();
+				// ArrowShot OParrowShot = opAction.getArrowShot();
 				// if (!isMoveLegal(OPqueenMove, OParrowShot)) {
 				// 	System.out.println("Illegal move made: Queen move from (" + OPqueenMove.getStartRow() + ", "
 				// 			+ OPqueenMove.getStartCol() + ") to (" + OPqueenMove.getEndRow() + ", "
@@ -136,20 +150,22 @@ public class COSC322Test extends GamePlayer {
 				// 	System.exit(1);
 				// }
 				getGameGUI().updateGameState(msgDetails);
-				board.updateBoardState(opAction, board);
+				// board.updateBoardState(opAction, board);
 				if (isBlack) {
 					// makeRandomMove();
 					makeMinMaxMove();
 				} else {
-					// makeRandomMove();
-					makeMinMaxMove();
+					makeRandomMove();
+					// makeMinMaxMove();
 				}
 
-				// makeRandomMove();
+				// makeRandomMove();System.out.println("old board:");
+                System.out.println("BOARD AFTER MOVE:");
 				System.out.println(board.boardToString());
 				if (ActionFactory.getActions(board, player == Board.BLACK_QUEEN ? Board.WHITE_QUEEN : Board.BLACK_QUEEN)
 						.size() == 0) {
 					System.out.println("We(" + player + ") won");
+                    //System.exit(0);
 				}
 				break;
 			default:
@@ -175,13 +191,13 @@ public class COSC322Test extends GamePlayer {
 		getGameClient().sendMoveMessage(move.toServerResponse());
 		getGameGUI().updateGameState(move.toServerResponse());
 
-		board.updateBoardState(move, board);
+		board.updateBoardState(move);
 	}
 
 	private void makeMinMaxMove() {
 		// will eventually use itertive deepening on a timer, tree will be smaller as
 		// game progresses
-		int depth = 2;
+		int depth = 1;
 		int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
 		Action bestAction = MinMax.findBestAction(board, depth, player, 1);
 
@@ -189,7 +205,7 @@ public class COSC322Test extends GamePlayer {
 		getGameClient().sendMoveMessage(bestAction.toServerResponse());
 		getGameGUI().updateGameState(bestAction.toServerResponse());
 
-		board.updateBoardState(bestAction, board);
+		board.updateBoardState(bestAction);
 	}
 
 	@Override

@@ -34,7 +34,7 @@ public class Board {
         for (int i = 0; i < BOARD_SIZE; i++){
             for (int j = 0; j < BOARD_SIZE; j++){
                 int value = gameState.get(index++);
-                board[i][j] = value;
+                this.board[i][j] = value;
             }
             index++;
         }
@@ -53,29 +53,29 @@ public class Board {
     public Board(Board oldBoard, Action action){
         this.board = new int[BOARD_SIZE][BOARD_SIZE];
         Board newBoard = new Board(oldBoard);
-        newBoard.updateBoardState(action, newBoard);
+        newBoard.updateBoardState(action);
         for (int i = 0; i < BOARD_SIZE; i++){
             for (int j = 0; j < BOARD_SIZE; j++){
-                board[i][j] = newBoard.getPieceAt(i, j);
+                this.board[i][j] = newBoard.getPieceAt(i, j);
             }
         }
     }
 
-    public void updateBoardState(Action action, Board board){
+    public void updateBoardState(Action action){
         QueenMove move = action.getQueenMove();
         ArrowShot arrow = action.getArrowShot();
 
         // get the color/player that made the move
-        int player = board.getPieceAt(move.getStartRow(),move.getStartCol());
+        int player = this.getPieceAt(move.getStartRow(),move.getStartCol());
         // System.out.println("PLayer moving: " + player);
         
         // update board to 0 where queen was and move queen
-        board.setPieceAt(move.getStartRow(), move.getStartCol(), 0);
-        board.setPieceAt(move.getEndRow(), move.getEndCol(), player);
+        this.setPieceAt(move.getStartRow(), move.getStartCol(), 0);
+        this.setPieceAt(move.getEndRow(), move.getEndCol(), player);
       
 
         // update arrow on board
-        board.setPieceAt(arrow.getEndRow(), arrow.getEndCol(), ARROW);
+        this.setPieceAt(arrow.getEndRow(), arrow.getEndCol(), ARROW);
 
     }
 

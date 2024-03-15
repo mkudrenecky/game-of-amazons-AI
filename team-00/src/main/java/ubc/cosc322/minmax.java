@@ -33,7 +33,7 @@ public class MinMax {
         }
 
         Action bestAction = null;
-
+        
         if (currentPlayer == maximizingPlayer) {
             int maxEval = Integer.MIN_VALUE;
             for (Action action : legalActions) {
