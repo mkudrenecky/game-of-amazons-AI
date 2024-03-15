@@ -33,7 +33,7 @@ public class COSC322Test extends GamePlayer {
 	private Board board;
 	private int player;
 	private Action action;
-	private static TestClass testClass;
+	// private static TestClass testClass;
 	private boolean isBlack;
    
 
@@ -46,7 +46,7 @@ public class COSC322Test extends GamePlayer {
 
 		GamePlayer player;
         GamePlayer player2;
-		testClass = new TestClass();
+		// testClass = new TestClass();
 		
 		// COSC322Test player = new COSC322Test(args[0], args[1]);
 
@@ -123,7 +123,6 @@ public class COSC322Test extends GamePlayer {
 				    System.out.println(board.boardToString());
                 }
 
-				System.out.println(board.boardToString());
 				break;
 			case GameMessage.GAME_STATE_BOARD:
                 // this is the opening state of the game of the game
@@ -159,14 +158,14 @@ public class COSC322Test extends GamePlayer {
                 System.out.println(board.boardToString());
 
                 // test the opponent move against the validator
-                Action opponentAction = testClass.findMove(oldBoard, board);
-				System.out.println("Opponent move legal? " + testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard));
+                // Action opponentAction = testClass.findMove(oldBoard, board);
+				// System.out.println("Opponent move legal? " + testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard));
 
-                // shut down the game if opponent makes an illegal move
-				if (!testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard)){
-                System.out.println("Opponent has made an illegal move!");
-                    System.exit(0);
-                }
+                // // shut down the game if opponent makes an illegal move
+				// if (!testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard)){
+                // System.out.println("Opponent has made an illegal move!");
+                //     System.exit(0);
+                // }
 		
                 // update the gui if all checks pass
 				getGameGUI().updateGameState(msgDetails);
@@ -177,8 +176,9 @@ public class COSC322Test extends GamePlayer {
 					// makeRandomMove();
 					makeMinMaxMove();
 				} else {
-					makeRandomMove();
+					// makeRandomMove();
 					// makeMinMaxMove();
+                    makeNegamaxMove();
 				}
 
 				// Additional visualization to ensure board is as expected
@@ -211,7 +211,7 @@ public class COSC322Test extends GamePlayer {
 		Action move = actions.get((int) (Math.random() * actions.size()));
         if (actions.size() == 0){
             System.out.println("We("+player+") are out of moves, we lost!! :( :( :( ");
-            System.exit(0);
+            // System.exit(0);
         }
 
 		System.out.println("About to send random move");
@@ -222,22 +222,84 @@ public class COSC322Test extends GamePlayer {
 	}
 
 	private void makeMinMaxMove() {
-		// will eventually use iterative deepening on a timer, tree will be smaller as
-		// game progresses
-		int depth = 1;
-		int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
-		Action bestAction = MinMax.findBestAction(board, depth, player, 1);
-        if (bestAction == null){
-            System.out.println("We("+player+") are out of moves, we lost!! :( :( :( ");
-            System.exit(0);
+        // Initialize the best action with null
+        Action bestAction = null;
+    
+        // Start with a depth of 1
+        int depth = 1;
+        int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
+    
+        // Get the current time
+        long startTime = System.currentTimeMillis();
+        long timeLimit = 2000; // 30 seconds
+    
+        // Iterate until time limit is reached
+        while (System.currentTimeMillis() - startTime < 2000) { // 30 seconds
+    
+            // Perform Minimax search with the current depth
+            Action currentBestAction = MinMax.findBestAction(board, depth, player, 1, startTime, timeLimit);
+            if (currentBestAction == null) {
+                System.out.println("We("+player+") are out of MinMax moves, we lost!! :( :( :( ");
+                // System.exit(0);
+            }
+    
+            // Update the best action found so far
+            bestAction = currentBestAction;
+    
+            // Increment the depth for the next iteration
+            depth++;
         }
-
-		System.out.println("making min max move for black? " + isBlack);
-		getGameClient().sendMoveMessage(bestAction.toServerResponse());
-		getGameGUI().updateGameState(bestAction.toServerResponse());
-
-		board.updateBoardState(bestAction);
-	}
+    
+        // Send the best action found so far
+        if (bestAction != null) {
+            System.out.println("making min max move for black? " + isBlack);
+            getGameClient().sendMoveMessage(bestAction.toServerResponse());
+            getGameGUI().updateGameState(bestAction.toServerResponse());
+            board.updateBoardState(bestAction);
+        } else {
+            System.out.println("No valid move found within the time limit.");
+        }
+    }
+    
+    private void makeNegamaxMove() {
+        // Initialize the best action with null
+        Action bestAction = null;
+    
+        // Start with a depth of 1
+        int depth = 1;
+        int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
+    
+        // Get the current time
+        long startTime = System.currentTimeMillis();
+        long timeLimit = 2000; // 30 seconds
+    
+        // Iterate until time limit is reached
+        while (System.currentTimeMillis() - startTime < 2000) { // 30 seconds
+    
+            // Perform Negamax search with the current depth
+            Action currentBestAction = Negamax.findBestAction(board, depth, player, 1, startTime, timeLimit);
+            if (currentBestAction == null) {
+                System.out.println("We("+player+") are out of Negamax moves, we lost!! :( :( :( ");
+                // System.exit(0);
+            }
+    
+            // Update the best action found so far
+            bestAction = currentBestAction;
+    
+            // Increment the depth for the next iteration
+            depth++;
+        }
+    
+        // Send the best action found so far
+        if (bestAction != null) {
+            System.out.println("making negamax move for black? " + isBlack);
+            getGameClient().sendMoveMessage(bestAction.toServerResponse());
+            getGameGUI().updateGameState(bestAction.toServerResponse());
+            board.updateBoardState(bestAction);
+        } else {
+            System.out.println("No valid move found within the time limit.");
+        }
+    }
 
 	@Override
 	public String userName() {
