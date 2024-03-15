@@ -1,4 +1,4 @@
-# Game Of Amazons AI 
+# Game of the Amazons AI 
 An ongoing implementation of an aritificial intelligence based Game of Amazons player.
 
 ## Overview
