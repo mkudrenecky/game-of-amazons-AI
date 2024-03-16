@@ -33,7 +33,7 @@ public class COSC322Test extends GamePlayer {
 	private Board board;
 	private int player;
 	private Action action;
-	// private static TestClass testClass;
+	private static TestClass testClass;
 	private boolean isBlack;
    
 
@@ -46,7 +46,7 @@ public class COSC322Test extends GamePlayer {
 
 		GamePlayer player;
         GamePlayer player2;
-		// testClass = new TestClass();
+		testClass = new TestClass();
 		
 		// COSC322Test player = new COSC322Test(args[0], args[1]);
 
@@ -117,6 +117,7 @@ public class COSC322Test extends GamePlayer {
 				if (isBlack){
 					System.out.print("Hello Black");
 				    makeMinMaxMove();
+                    // makeRandomMove();
 
                     // display the board after opening move
                     System.out.println("BOARD AFTER OPENING BLACK MOVE:");
@@ -157,15 +158,15 @@ public class COSC322Test extends GamePlayer {
                 System.out.println("new board:");
                 System.out.println(board.boardToString());
 
-                // test the opponent move against the validator
-                // Action opponentAction = testClass.findMove(oldBoard, board);
-				// System.out.println("Opponent move legal? " + testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard));
+               	// test the opponent move against the validator
+                Action opponentAction = testClass.findMove(oldBoard, board);
+				System.out.println("Opponent move legal? " + testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard));
 
-                // // shut down the game if opponent makes an illegal move
-				// if (!testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard)){
-                // System.out.println("Opponent has made an illegal move!");
-                //     System.exit(0);
-                // }
+                // shut down the game if opponent makes an illegal move
+				if (!testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard)){
+                System.out.println("Opponent has made an illegal move!");
+                    System.exit(0);
+                }
 		
                 // update the gui if all checks pass
 				getGameGUI().updateGameState(msgDetails);
@@ -173,7 +174,7 @@ public class COSC322Test extends GamePlayer {
                 // make our move
                 // currently set up to play against white making random moves
 				if (isBlack) {
-					// makeRandomMove();
+					//makeRandomMove();
 					makeMinMaxMove();
 				} else {
 					// makeRandomMove();
@@ -188,7 +189,7 @@ public class COSC322Test extends GamePlayer {
                 // end game condition checking
 				if (ActionFactory.getActions(board, player == Board.BLACK_QUEEN ? Board.WHITE_QUEEN : Board.BLACK_QUEEN)
 						.size() == 0) {
-					System.out.println("We(" + player + ") won");
+					System.out.println("" + player + " won");
                     //System.exit(0);
 				}
 				break;
@@ -206,13 +207,13 @@ public class COSC322Test extends GamePlayer {
 	private void makeRandomMove() {
 		System.out.println("making move for black? " + isBlack);
 		ArrayList<Action> actions = ActionFactory.getActions(board, isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN);
-
-		System.out.println("WE made the actions");
-		Action move = actions.get((int) (Math.random() * actions.size()));
         if (actions.size() == 0){
             System.out.println("We("+player+") are out of moves, we lost!! :( :( :( ");
             // System.exit(0);
         }
+
+		System.out.println("WE made the actions");
+		Action move = actions.get((int) (Math.random() * actions.size()));
 
 		System.out.println("About to send random move");
 		getGameClient().sendMoveMessage(move.toServerResponse());
