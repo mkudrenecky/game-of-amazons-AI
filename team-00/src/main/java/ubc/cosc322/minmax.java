@@ -11,25 +11,24 @@ public class MinMax {
         this.bestAction = bestAction;
     }
 
-    public static Action findBestAction(Board board, int depth, int player, int heuristic) {
+    public static Action findBestAction(Board board, int depth, int player, int heuristic, long startTime, long timeLimit) {
         int alpha = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
         int maximizingPlayer = player;
 
-        MinMax result = minMaxSearch(board, depth, alpha, beta, maximizingPlayer, player, heuristic);
+        MinMax result = minMaxSearch(board, depth, alpha, beta, maximizingPlayer, player, heuristic, startTime, timeLimit);
 
         Action bestAction = result.bestAction;
 
-        // System.out.println(new MinMax(0,bestAction).getNodeCount());
 
         return bestAction;
     }
 
-    private static MinMax minMaxSearch(Board board, int depth, int alpha, int beta, int maximizingPlayer, int currentPlayer, int heuristic) {
+    private static MinMax minMaxSearch(Board board, int depth, int alpha, int beta, int maximizingPlayer, int currentPlayer, int heuristic, long startTime, long timeLimit) {
         // setNodeCount(getNodeCount()++);
         List<Action> legalActions = ActionFactory.getActions(board, currentPlayer);
         if (depth == 0 || legalActions.isEmpty()) {
-            return new MinMax (evaluate(board, maximizingPlayer, heuristic ), null);
+            return new MinMax (evaluate(board, maximizingPlayer, heuristic), null);
         }
 
         Action bestAction = null;
@@ -37,10 +36,12 @@ public class MinMax {
         if (currentPlayer == maximizingPlayer) {
             int maxEval = Integer.MIN_VALUE;
             for (Action action : legalActions) {
+                if (System.currentTimeMillis() - startTime >= timeLimit) {
+                    System.out.println("Time's up! Search interrupted.");
+                    return new MinMax(maxEval, bestAction); // Return the best action found so far
+                }
                 Board nextBoard = new Board(board, action);
-                // System.out.println(nextBoard.boardToString());
-                // System.out.println(board.boardToString());
-                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer), heuristic).evaluation;
+                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer), heuristic, startTime, timeLimit).evaluation;
                 if (eval > maxEval) {
                     maxEval = eval;
                     bestAction = action;
@@ -54,10 +55,12 @@ public class MinMax {
         } else {
             int minEval = Integer.MAX_VALUE;
             for (Action action : legalActions) {
+                if (System.currentTimeMillis() - startTime >= timeLimit) {
+                    System.out.println("Time's up! Search interrupted.");
+                    return new MinMax(minEval, bestAction); // Return the best action found so far
+                }
                 Board nextBoard = new Board(board, action);
-                // System.out.println(nextBoard.boardToString());
-                // System.out.println(board.boardToString());
-                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer), heuristic).evaluation;
+                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer), heuristic, startTime, timeLimit).evaluation;
                 if (eval < minEval) {
                     minEval = eval;
                     bestAction = action;
@@ -67,7 +70,6 @@ public class MinMax {
                     break;
                 }
             }
-            System.out.println(minEval);
             return new MinMax(minEval, bestAction);
         }
     }
@@ -93,7 +95,6 @@ public class MinMax {
     
     private static int mobilityHeuristic(Board board, byte player){
         int mobilityScore = ActionFactory.getActions(board, player).size() - ActionFactory.getActions(board, getOpponent(player)).size();
-        // System.out.println("Mobility score for player " + player + ": " + mobilityScore);
         return mobilityScore;
     }
 
@@ -101,7 +102,6 @@ public class MinMax {
         byte playerTerritory = 0;
         for(int i = 0; i < board.getBoardSize(); i++){
             for(int j = 0; j < board.getBoardSize(); j++){
-                // System.out.println(ActionFactory.getActions(board, player).toString());
                 ArrayList<Action> playerActions =  ActionFactory.getActions(board, player);
                 ArrayList<Action> opponentActions =  ActionFactory.getActions(board, getOpponent(player));
 
