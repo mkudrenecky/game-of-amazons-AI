@@ -81,10 +81,10 @@ public class MinMax {
             //     evaluation = randomHeuristic(board, (byte) player);
             //     break;
             case 1:
-                evaluation = mobilityHeuristic(board, (byte) player);
+                evaluation = mobilityHeuristic(board, player);
                 break;
             case 2:
-                evaluation = territoryHeuristic(board, (byte) player);
+                evaluation = territoryHeuristic(board,  player);
                 break;
             case 3:
                 //mobility-territory heuristic
@@ -93,18 +93,18 @@ public class MinMax {
         return evaluation;
     }
     
-    private static int mobilityHeuristic(Board board, byte player){
+    private static int mobilityHeuristic(Board board, int player){
         int mobilityScore = ActionFactory.getActions(board, player).size() - ActionFactory.getActions(board, getOpponent(player)).size();
         return mobilityScore;
     }
 
-    private static byte territoryHeuristic(Board board, byte player){
-        byte playerTerritory = 0;
+    private static int territoryHeuristic(Board board, int player){
+        ArrayList<Action> playerActions =  ActionFactory.getActions(board, player);
+        ArrayList<Action> opponentActions =  ActionFactory.getActions(board, getOpponent(player));
+        int playerTerritory = 0;
         for(int i = 0; i < board.getBoardSize(); i++){
             for(int j = 0; j < board.getBoardSize(); j++){
-                ArrayList<Action> playerActions =  ActionFactory.getActions(board, player);
-                ArrayList<Action> opponentActions =  ActionFactory.getActions(board, getOpponent(player));
-
+                
                 // actions.stream().collect(Collectors.toMap(Action::actions.getQueenMove().getEndCol(), null));
                 int playerSquare = 0;
                 int opponentSquare = 0;

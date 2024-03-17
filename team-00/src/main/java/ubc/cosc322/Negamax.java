@@ -67,11 +67,12 @@ public class Negamax {
     }
 
     private static int territoryHeuristic(Board board, int player) {
+        ArrayList<Action> playerActions = ActionFactory.getActions(board, player);
+        ArrayList<Action> opponentActions = ActionFactory.getActions(board, getOpponent(player));
         int playerTerritory = 0;
         for (int i = 0; i < board.getBoardSize(); i++) {
             for (int j = 0; j < board.getBoardSize(); j++) {
-                ArrayList<Action> playerActions = ActionFactory.getActions(board, player);
-                ArrayList<Action> opponentActions = ActionFactory.getActions(board, getOpponent(player));
+                
                 int playerSquare = 0;
                 int opponentSquare = 0;
                 for (Action action : playerActions) {
