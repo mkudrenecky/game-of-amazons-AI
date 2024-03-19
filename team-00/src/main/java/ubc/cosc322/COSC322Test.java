@@ -57,7 +57,7 @@ public class COSC322Test extends GamePlayer {
         // code for human player
 		// player2 = new HumanPlayer();
 
-		// player.connect();
+		player.connect();
 		player2.connect();
 
 		if (player.getGameGUI() == null) {
@@ -187,8 +187,7 @@ public class COSC322Test extends GamePlayer {
 				System.out.println(board.boardToString());
 
                 // end game condition checking
-				if (ActionFactory.getActions(board, player == Board.BLACK_QUEEN ? Board.WHITE_QUEEN : Board.BLACK_QUEEN)
-						.size() == 0) {
+				if (ActionFactory.getActions(board, player == Board.BLACK_QUEEN ? Board.WHITE_QUEEN : Board.BLACK_QUEEN).size() == 0) {
 					System.out.println("" + player + " won");
                     //System.exit(0);
 				}
@@ -235,10 +234,10 @@ public class COSC322Test extends GamePlayer {
         long timeLimit = 1000; // 30 seconds
     
         // Iterate until time limit is reached
-        while (System.currentTimeMillis() - startTime < 1000) { // 30 seconds
+        while (System.currentTimeMillis() - startTime < timeLimit) { // 30 seconds
     
             // Perform Minimax search with the current depth
-            Action currentBestAction = MinMax.findBestAction(board, depth, player, 2, startTime, timeLimit);
+            Action currentBestAction = MinMax.findBestAction(board, depth, player, 3, startTime, timeLimit);
             if (currentBestAction == null) {
                 System.out.println("We("+player+") are out of MinMax moves, we lost!! :( :( :( ");
                 // System.exit(0);
@@ -275,10 +274,10 @@ public class COSC322Test extends GamePlayer {
         long timeLimit = 1000; // 30 seconds
     
         // Iterate until time limit is reached
-        while (System.currentTimeMillis() - startTime <1000) { // 30 seconds
+        while (System.currentTimeMillis() - startTime < timeLimit) { // 30 seconds
     
             // Perform Negamax search with the current depth
-            Action currentBestAction = Negamax.findBestAction(board, depth, player, 2, startTime, timeLimit);
+            Action currentBestAction = Negamax.findBestAction(board, depth, player, 4, startTime, timeLimit);
             if (currentBestAction == null) {
                 System.out.println("We("+player+") are out of Negamax moves, we lost!! :( :( :( ");
                 // System.exit(0);
