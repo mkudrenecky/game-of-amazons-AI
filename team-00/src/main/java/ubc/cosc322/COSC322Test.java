@@ -45,30 +45,30 @@ public class COSC322Test extends GamePlayer {
 	public static void main(String[] args) {
 
 		GamePlayer player;
-        GamePlayer player2;
+        // GamePlayer player2;
 		testClass = new TestClass();
 		
 		// COSC322Test player = new COSC322Test(args[0], args[1]);
 
         // creates two players to have them play eachother, launches a GUI for each player
-		player = new COSC322Test("mac", "123");
-		player2 = new COSC322Test("sam", "456");
+		player = new COSC322Test("Team 14", "123");
+		// player2 = new COSC322Test("sam", "456");
 
         // code for human player
 		// player2 = new HumanPlayer();
 
 		player.connect();
-		player2.connect();
+		// player2.connect();
 
 		if (player.getGameGUI() == null) {
 			player.Go();
-			player2.Go();
+			// player2.Go();
 		} else {
 			BaseGameGUI.sys_setup();
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					player.Go();
-					player2.Go();
+					// player2.Go();
 				}
 			});
 		}
@@ -115,19 +115,19 @@ public class COSC322Test extends GamePlayer {
 
                 // if we are black, we make the first move
 				if (isBlack){
-					System.out.print("Hello Black");
-				    makeMinMaxMove();
+					// System.out.print("Hello Black");
+				    makeNegamaxMove();
                     // makeRandomMove();
 
                     // display the board after opening move
-                    System.out.println("BOARD AFTER OPENING BLACK MOVE:");
-				    System.out.println(board.boardToString());
+                    // System.out.println("BOARD AFTER OPENING BLACK MOVE:");
+				    // System.out.println(board.boardToString());
                 }
 
 				break;
 			case GameMessage.GAME_STATE_BOARD:
                 // this is the opening state of the game of the game
-				System.out.println("Message Details: " + msgDetails);
+				// System.out.println("Message Details: " + msgDetails);
                 
                 // set the gui to the starting state
 				getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
@@ -136,55 +136,56 @@ public class COSC322Test extends GamePlayer {
 				board = new Board((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
 
                 // display the initial board for sanity
-                System.out.println("Initial Board:");
-				System.out.println(board.boardToString());
+                // System.out.println("Initial Board:");
+				// System.out.println(board.boardToString());
 				
 				break;
 			case GameMessage.GAME_ACTION_MOVE:
 				// add in some sanity checks to visualize the board, there are a lot of sanity checks here
-                System.out.println("old board:");
-                System.out.println(board.boardToString());
+                // System.out.println("old board:");
+                // System.out.println(board.boardToString());
 
                 // create a copy of the current board and display
                 Board oldBoard = new Board(board);
-                System.out.println("old board v2:");
-                System.out.println(oldBoard.boardToString());
+                // System.out.println("old board v2:");
+                // System.out.println(oldBoard.boardToString());
 
                 // get the opponent action from the server and update the board
                 Action opAction = new Action(msgDetails);
                 board.updateBoardState(opAction);
 
                 // display the board reflecting opponent move
-                System.out.println("new board:");
-                System.out.println(board.boardToString());
+                // System.out.println("new board:");
+                // System.out.println(board.boardToString());
 
                	// test the opponent move against the validator
                 Action opponentAction = testClass.findMove(oldBoard, board);
-				System.out.println("Opponent move legal? " + testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard));
+				// System.out.println("Opponent move legal? " + testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard));
 
                 // shut down the game if opponent makes an illegal move
 				if (!testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard)){
                 System.out.println("Opponent has made an illegal move!");
-                    System.exit(0);
+                    // System.exit(0);
                 }
 		
                 // update the gui if all checks pass
 				getGameGUI().updateGameState(msgDetails);
 
                 // make our move
+				makeNegamaxMove();
                 // currently set up to play against white making random moves
-				if (isBlack) {
-					//makeRandomMove();
-					makeMinMaxMove();
-				} else {
-					// makeRandomMove();
-					// makeMinMaxMove();
-                    makeNegamaxMove();
-				}
+				// if (isBlack) {
+				// 	//makeRandomMove();
+				// 	makeMinMaxMove();
+				// } else {
+				// 	// makeRandomMove();
+				// 	// makeMinMaxMove();
+                //     makeNegamaxMove();
+				// }
 
 				// Additional visualization to ensure board is as expected
-                System.out.println("BOARD AFTER MOVE:");
-				System.out.println(board.boardToString());
+                // System.out.println("BOARD AFTER MOVE:");
+				// System.out.println(board.boardToString());
 
                 // end game condition checking
 				if (ActionFactory.getActions(board, player == Board.BLACK_QUEEN ? Board.WHITE_QUEEN : Board.BLACK_QUEEN).size() == 0) {
@@ -231,7 +232,7 @@ public class COSC322Test extends GamePlayer {
     
         // Get the current time
         long startTime = System.currentTimeMillis();
-        long timeLimit = 1000; // 30 seconds
+        long timeLimit = 28000; // 30 seconds
     
         // Iterate until time limit is reached
         while (System.currentTimeMillis() - startTime < timeLimit) { // 30 seconds
@@ -271,7 +272,7 @@ public class COSC322Test extends GamePlayer {
     
         // Get the current time
         long startTime = System.currentTimeMillis();
-        long timeLimit = 1000; // 30 seconds
+        long timeLimit = 28000; // 30 seconds
     
         // Iterate until time limit is reached
         while (System.currentTimeMillis() - startTime < timeLimit) { // 30 seconds
@@ -292,7 +293,7 @@ public class COSC322Test extends GamePlayer {
     
         // Send the best action found so far
         if (bestAction != null) {
-            System.out.println("making negamax move for black? " + isBlack);
+            // System.out.println("making negamax move for black? " + isBlack);
             getGameClient().sendMoveMessage(bestAction.toServerResponse());
             getGameGUI().updateGameState(bestAction.toServerResponse());
             board.updateBoardState(bestAction);
