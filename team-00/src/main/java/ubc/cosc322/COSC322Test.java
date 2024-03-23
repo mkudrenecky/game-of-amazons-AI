@@ -45,30 +45,30 @@ public class COSC322Test extends GamePlayer {
 	public static void main(String[] args) {
 
 		GamePlayer player;
-        // GamePlayer player2;
+        GamePlayer player2;
 		testClass = new TestClass();
 		
 		// COSC322Test player = new COSC322Test(args[0], args[1]);
 
         // creates two players to have them play eachother, launches a GUI for each player
-		player = new COSC322Test("Team 14", "123");
-		// player2 = new COSC322Test("sam", "456");
+		player = new COSC322Test("Team 14 :)", "123");
+		player2 = new COSC322Test("sam", "456");
 
         // code for human player
 		// player2 = new HumanPlayer();
 
 		player.connect();
-		// player2.connect();
+		player2.connect();
 
 		if (player.getGameGUI() == null) {
 			player.Go();
-			// player2.Go();
+			player2.Go();
 		} else {
 			BaseGameGUI.sys_setup();
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					player.Go();
-					// player2.Go();
+					player2.Go();
 				}
 			});
 		}
@@ -116,7 +116,7 @@ public class COSC322Test extends GamePlayer {
                 // if we are black, we make the first move
 				if (isBlack){
 					// System.out.print("Hello Black");
-				    makeNegamaxMove();
+				    makeMinMaxMove();
                     // makeRandomMove();
 
                     // display the board after opening move
@@ -172,16 +172,16 @@ public class COSC322Test extends GamePlayer {
 				getGameGUI().updateGameState(msgDetails);
 
                 // make our move
-				makeNegamaxMove();
+				// makeNegamaxMove();
                 // currently set up to play against white making random moves
-				// if (isBlack) {
-				// 	//makeRandomMove();
-				// 	makeMinMaxMove();
-				// } else {
-				// 	// makeRandomMove();
-				// 	// makeMinMaxMove();
-                //     makeNegamaxMove();
-				// }
+				if (isBlack) {
+					//makeRandomMove();
+					makeMinMaxMove();
+				} else {
+					// makeRandomMove();
+					// makeMinMaxMove();
+                    makeNegamaxMove();
+				}
 
 				// Additional visualization to ensure board is as expected
                 // System.out.println("BOARD AFTER MOVE:");
@@ -233,23 +233,24 @@ public class COSC322Test extends GamePlayer {
         // Get the current time
         long startTime = System.currentTimeMillis();
         long timeLimit = 28000; // 30 seconds
+		bestAction = MinMax.findBestAction(board, depth, player, 1);
     
         // Iterate until time limit is reached
-        while (System.currentTimeMillis() - startTime < timeLimit) { // 30 seconds
+        // while (System.currentTimeMillis() - startTime < timeLimit) { // 30 seconds
     
-            // Perform Minimax search with the current depth
-            Action currentBestAction = MinMax.findBestAction(board, depth, player, 3, startTime, timeLimit);
-            if (currentBestAction == null) {
-                System.out.println("We("+player+") are out of MinMax moves, we lost!! :( :( :( ");
-                // System.exit(0);
-            }
+        //     // Perform Minimax search with the current depth
+        //     Action currentBestAction = MinMax.findBestAction(board, depth, player, 1);
+        //     if (currentBestAction == null) {
+        //         System.out.println("We("+player+") are out of MinMax moves, we lost!! :( :( :( ");
+        //         // System.exit(0);
+        //     }
     
-            // Update the best action found so far
-            bestAction = currentBestAction;
+        //     // Update the best action found so far
+        //     bestAction = currentBestAction;
     
-            // Increment the depth for the next iteration
-            depth++;
-        }
+        //     // Increment the depth for the next iteration
+        //     depth++;
+        // }
     
         // Send the best action found so far
         if (bestAction != null) {
@@ -272,13 +273,13 @@ public class COSC322Test extends GamePlayer {
     
         // Get the current time
         long startTime = System.currentTimeMillis();
-        long timeLimit = 28000; // 30 seconds
+        long timeLimit = 5000; // 30 seconds
     
         // Iterate until time limit is reached
         while (System.currentTimeMillis() - startTime < timeLimit) { // 30 seconds
     
             // Perform Negamax search with the current depth
-            Action currentBestAction = Negamax.findBestAction(board, depth, player, 4, startTime, timeLimit);
+            Action currentBestAction = Negamax.findBestAction(board, depth, player, 1, startTime, timeLimit);
             if (currentBestAction == null) {
                 System.out.println("We("+player+") are out of Negamax moves, we lost!! :( :( :( ");
                 // System.exit(0);

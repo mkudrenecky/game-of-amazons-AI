@@ -11,12 +11,12 @@ public class MinMax {
         this.bestAction = bestAction;
     }
 
-    public static Action findBestAction(Board board, int depth, int player, int heuristic, long startTime, long timeLimit) {
+    public static Action findBestAction(Board board, int depth, int player, int heuristic) {
         int alpha = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
         int maximizingPlayer = player;
 
-        MinMax result = minMaxSearch(board, depth, alpha, beta, maximizingPlayer, player, heuristic, startTime, timeLimit);
+        MinMax result = minMaxSearch(board, depth, alpha, beta, maximizingPlayer, player, heuristic);
 
         Action bestAction = result.bestAction;
 
@@ -24,7 +24,7 @@ public class MinMax {
         return bestAction;
     }
 
-    private static MinMax minMaxSearch(Board board, int depth, int alpha, int beta, int maximizingPlayer, int currentPlayer, int heuristic, long startTime, long timeLimit) {
+    private static MinMax minMaxSearch(Board board, int depth, int alpha, int beta, int maximizingPlayer, int currentPlayer, int heuristic) {
         // setNodeCount(getNodeCount()++);
         List<Action> legalActions = ActionFactory.getActions(board, currentPlayer);
         if (depth == 0 || legalActions.isEmpty()) {
@@ -36,12 +36,9 @@ public class MinMax {
         if (currentPlayer == maximizingPlayer) {
             int maxEval = Integer.MIN_VALUE;
             for (Action action : legalActions) {
-                if (System.currentTimeMillis() - startTime >= timeLimit) {
-                    System.out.println("Time's up! Search interrupted.");
-                    return new MinMax(maxEval, bestAction); // Return the best action found so far
-                }
+                
                 Board nextBoard = new Board(board, action);
-                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer), heuristic, startTime, timeLimit).evaluation;
+                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer), heuristic).evaluation;
                 if (eval > maxEval) {
                     maxEval = eval;
                     bestAction = action;
@@ -55,12 +52,9 @@ public class MinMax {
         } else {
             int minEval = Integer.MAX_VALUE;
             for (Action action : legalActions) {
-                if (System.currentTimeMillis() - startTime >= timeLimit) {
-                    System.out.println("Time's up! Search interrupted.");
-                    return new MinMax(minEval, bestAction); // Return the best action found so far
-                }
+                
                 Board nextBoard = new Board(board, action);
-                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer), heuristic, startTime, timeLimit).evaluation;
+                int eval = minMaxSearch(nextBoard, depth - 1, alpha, beta, maximizingPlayer, getOpponent(currentPlayer), heuristic).evaluation;
                 if (eval < minEval) {
                     minEval = eval;
                     bestAction = action;
