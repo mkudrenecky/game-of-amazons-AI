@@ -165,6 +165,7 @@ public class COSC322Test extends GamePlayer {
                 // shut down the game if opponent makes an illegal move
 				if (!testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard)){
                 System.out.println("Opponent has made an illegal move!");
+				System.out.println(opponentAction.toString());
                     // System.exit(0);
                 }
 		
