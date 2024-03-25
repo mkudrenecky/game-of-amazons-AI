@@ -45,30 +45,30 @@ public class COSC322Test extends GamePlayer {
 	public static void main(String[] args) {
 
 		GamePlayer player;
-        GamePlayer player2;
+        // GamePlayer player2;
 		testClass = new TestClass();
 		
 		// COSC322Test player = new COSC322Test(args[0], args[1]);
 
         // creates two players to have them play eachother, launches a GUI for each player
 		player = new COSC322Test("Team 14 :)", "123");
-		player2 = new COSC322Test("sam", "456");
+		// player2 = new COSC322Test("sam", "456");
 
         // code for human player
 		// player2 = new HumanPlayer();
 
 		player.connect();
-		player2.connect();
+		// player2.connect();
 
 		if (player.getGameGUI() == null) {
 			player.Go();
-			player2.Go();
+			// player2.Go();
 		} else {
 			BaseGameGUI.sys_setup();
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					player.Go();
-					player2.Go();
+					// player2.Go();
 				}
 			});
 		}
@@ -116,7 +116,7 @@ public class COSC322Test extends GamePlayer {
                 // if we are black, we make the first move
 				if (isBlack){
 					// System.out.print("Hello Black");
-				    makeMinMaxMove();
+				    makeMinMaxMove(1,4);
                     // makeRandomMove();
 
                     // display the board after opening move
@@ -173,15 +173,17 @@ public class COSC322Test extends GamePlayer {
 
                 // make our move
 				// makeNegamaxMove();
+				makeMinMaxMove(1,4);
                 // currently set up to play against white making random moves
-				if (isBlack) {
-					//makeRandomMove();
-					makeMinMaxMove();
-				} else {
-					// makeRandomMove();
-					// makeMinMaxMove();
-                    makeNegamaxMove();
-				}
+				// if (isBlack) {
+				// 	//makeRandomMove();
+				// 	makeMinMaxMove(1,4);
+				// } else {
+				// 	// makeRandomMove();
+				// 	// makeMinMaxMove();
+				// 	makeNegamaxMove();
+                //     // makeMinMaxMove(1,4);
+				// }
 
 				// Additional visualization to ensure board is as expected
                 // System.out.println("BOARD AFTER MOVE:");
@@ -222,18 +224,18 @@ public class COSC322Test extends GamePlayer {
 		board.updateBoardState(move);
 	}
 
-	private void makeMinMaxMove() {
+	private void makeMinMaxMove(int depth, int heuristic) {
         // Initialize the best action with null
         Action bestAction = null;
     
         // Start with a depth of 1
-        int depth = 1;
+        // int depth = 1;
         int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
     
         // Get the current time
         long startTime = System.currentTimeMillis();
         long timeLimit = 28000; // 30 seconds
-		bestAction = MinMax.findBestAction(board, depth, player, 1);
+		bestAction = MinMax.findBestAction(board, depth, player, heuristic);
     
         // Iterate until time limit is reached
         // while (System.currentTimeMillis() - startTime < timeLimit) { // 30 seconds
