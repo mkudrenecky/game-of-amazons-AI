@@ -51,7 +51,7 @@ public class COSC322Test extends GamePlayer {
 		// COSC322Test player = new COSC322Test(args[0], args[1]);
 
         // creates two players to have them play eachother, launches a GUI for each player
-		player = new COSC322Test("Team 14 :)", "123");
+		player = new COSC322Test("Team 14", "1233");
 		// player2 = new COSC322Test("sam", "456");
 
         // code for human player
@@ -120,8 +120,8 @@ public class COSC322Test extends GamePlayer {
                     // makeRandomMove();
 
                     // display the board after opening move
-                    // System.out.println("BOARD AFTER OPENING BLACK MOVE:");
-				    // System.out.println(board.boardToString());
+                    System.out.println("BOARD AFTER OPENING BLACK MOVE:");
+				    System.out.println(board.boardToString());
                 }
 
 				break;
@@ -136,27 +136,27 @@ public class COSC322Test extends GamePlayer {
 				board = new Board((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
 
                 // display the initial board for sanity
-                // System.out.println("Initial Board:");
-				// System.out.println(board.boardToString());
+                System.out.println("Initial Board:");
+				System.out.println(board.boardToString());
 				
 				break;
 			case GameMessage.GAME_ACTION_MOVE:
 				// add in some sanity checks to visualize the board, there are a lot of sanity checks here
-                // System.out.println("old board:");
-                // System.out.println(board.boardToString());
+                System.out.println("old board:");
+                System.out.println(board.boardToString());
 
                 // create a copy of the current board and display
                 Board oldBoard = new Board(board);
-                // System.out.println("old board v2:");
-                // System.out.println(oldBoard.boardToString());
+                System.out.println("old board v2:");
+                System.out.println(oldBoard.boardToString());
 
                 // get the opponent action from the server and update the board
                 Action opAction = new Action(msgDetails);
                 board.updateBoardState(opAction);
 
                 // display the board reflecting opponent move
-                // System.out.println("new board:");
-                // System.out.println(board.boardToString());
+                System.out.println("new board:");
+                System.out.println(board.boardToString());
 
                	// test the opponent move against the validator
                 Action opponentAction = testClass.findMove(oldBoard, board);
@@ -183,12 +183,13 @@ public class COSC322Test extends GamePlayer {
 				// 	// makeRandomMove();
 				// 	// makeMinMaxMove();
 				// 	makeNegamaxMove();
+				// }
                 //     // makeMinMaxMove(1,4);
 				// }
 
 				// Additional visualization to ensure board is as expected
-                // System.out.println("BOARD AFTER MOVE:");
-				// System.out.println(board.boardToString());
+                System.out.println("BOARD AFTER MOVE:");
+				System.out.println(board.boardToString());
 
                 // end game condition checking
 				if (ActionFactory.getActions(board, player == Board.BLACK_QUEEN ? Board.WHITE_QUEEN : Board.BLACK_QUEEN).size() == 0) {
