@@ -12,6 +12,7 @@ public class Action {
     private QueenMove queenMove;
     private ArrowShot arrowShot;
     private int player;
+    public int value=0;
    
     public Action(QueenMove queenMove, ArrowShot arrowShot) {
         this.queenMove = queenMove;
@@ -70,6 +71,10 @@ public class Action {
             + "\nArrow:" 
             + "\nStart Col: " + arrowShot.getStartCol() + " Start Row: " + arrowShot.getStartRow()
             + "\nEnd Col: " + arrowShot.getEndCol() + " End Row: " + arrowShot.getEndRow();
+    }
+
+    public void setValue(int value){
+        this.value = value;
     }
 
 }

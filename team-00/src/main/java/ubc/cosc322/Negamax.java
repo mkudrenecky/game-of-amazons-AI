@@ -41,6 +41,7 @@ public class Negamax {
             if (eval > maxEval) {
                 maxEval = eval;
                 bestAction = action;
+                bestAction.value = eval;
             }
             alpha = Math.max(alpha, eval);
             if (beta <= alpha) {
