@@ -8,12 +8,14 @@ public class TestPlayer {
     private int depth;
     private int nodesExplored;
     private boolean winner;
+    private long timeLimit;
 
-    public TestPlayer(String playerName, boolean isBlack, int heuristicType, int depth){
+    public TestPlayer(String playerName, boolean isBlack, int heuristicType, int depth, long timeLimit){
         this.playerName = playerName;
         this.isBlack = isBlack;
         this.heuristicType = heuristicType;
         this.depth = depth;
+        this.timeLimit = timeLimit;
         setHeuristicName();
     }
     
@@ -57,6 +59,9 @@ public class TestPlayer {
     }
     public void incrementNodes(){
         nodesExplored++;
+    }
+    public long getTimeLimit(){
+        return this.timeLimit;
     }
 
     public String toString(){

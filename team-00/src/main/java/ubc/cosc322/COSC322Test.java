@@ -46,7 +46,7 @@ public class COSC322Test extends GamePlayer {
 
 		GamePlayer player;
         // GamePlayer player2;
-		testClass = new TestClass();
+		// testClass = new TestClass();
 		
 		// COSC322Test player = new COSC322Test(args[0], args[1]);
 
@@ -103,9 +103,11 @@ public class COSC322Test extends GamePlayer {
 
 	@Override
 	public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
+		System.out.println("In handle game message");
 
 		switch (messageType) {
 			case GameMessage.GAME_ACTION_START:
+				System.out.println("In game action start");
 				
 				// Black goes first, check if we are black
 				isBlack = msgDetails.get(AmazonsGameMessage.PLAYER_BLACK).equals(getGameClient().getUserName());
@@ -126,6 +128,7 @@ public class COSC322Test extends GamePlayer {
 
 				break;
 			case GameMessage.GAME_STATE_BOARD:
+				System.out.println("In Game State Board");
                 // this is the opening state of the game of the game
 				// System.out.println("Message Details: " + msgDetails);
                 
@@ -141,6 +144,7 @@ public class COSC322Test extends GamePlayer {
 				
 				break;
 			case GameMessage.GAME_ACTION_MOVE:
+				System.out.println("In game action move");
 				// add in some sanity checks to visualize the board, there are a lot of sanity checks here
                 // System.out.println("old board:");
                 // System.out.println(board.boardToString());
@@ -236,7 +240,7 @@ public class COSC322Test extends GamePlayer {
         // Get the current time
         long startTime = System.currentTimeMillis();
         long timeLimit = 28000; // 30 seconds
-		bestAction = MinMax.findBestAction(board, depth, player, heuristic);
+		bestAction = MinMax.findBestAction(board, depth, player, heuristic, startTime, timeLimit);
     
         // Iterate until time limit is reached
         // while (System.currentTimeMillis() - startTime < timeLimit) { // 30 seconds
@@ -282,7 +286,7 @@ public class COSC322Test extends GamePlayer {
         while (System.currentTimeMillis() - startTime < timeLimit) { // 30 seconds
     
             // Perform Negamax search with the current depth
-            Action currentBestAction = Negamax.findBestAction(board, depth, player, 1, startTime, timeLimit);
+            Action currentBestAction = Negamax.findBestAction(board, depth, player, 4, startTime, timeLimit);
             if (currentBestAction == null) {
                 System.out.println("We("+player+") are out of Negamax moves, we lost!! :( :( :( ");
                 // System.exit(0);

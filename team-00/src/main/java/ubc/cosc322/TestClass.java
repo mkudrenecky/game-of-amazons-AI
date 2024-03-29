@@ -26,8 +26,8 @@ public class TestClass{
 
     public static void main(String[] args) {
         TestClass testClass = new TestClass();
-        TestPlayer testPlayer1 = new TestPlayer("Jeff", false, 2, 1);
-        TestPlayer testPlayer2 = new TestPlayer("Jennifer", true, 1,1);
+        TestPlayer testPlayer1 = new TestPlayer("Jeff", false, 2, 1, 15000);
+        TestPlayer testPlayer2 = new TestPlayer("Jennifer", true, 1,1, 5000);
         
         ArrayList<TestResult> testResult = new ArrayList<TestResult>();
         
@@ -50,15 +50,11 @@ public class TestClass{
         makeMove(testPlayer1, testPlayer2);
     }
 
-    private void testActionFactory(){
-
-    }
-
     private void makeMove(TestPlayer testPlayer1, TestPlayer testPlayer2){
-        TestPlayer currentPlayer = (!testPlayer1.getIsBlack() ? testPlayer1 : testPlayer2);
+        TestPlayer currentPlayer = (testPlayer1.getIsBlack() ? testPlayer1 : testPlayer2);
         Board oldBoard = null;
         while(!gameWon){
-            System.out.println("Making a move for " + currentPlayer.getPlayerName() + " " + (currentPlayer.getIsBlack()? 1 : 2 ));
+            System.out.println("Making a move for " + currentPlayer.getPlayerName() + " Black?: " + currentPlayer.getIsBlack());
             // System.out.println(board.boardToString());
             oldBoard = new Board(this.board);
             makeMinMaxMove(currentPlayer);
@@ -72,14 +68,15 @@ public class TestClass{
     } 
 
     private void checkWin(TestPlayer player){
-        if(MinMax.findBestAction(board, player.getDepth(), player.getIsBlack() ? 1 : 2, player.getHeuristicType()) == null){
+        if(ActionFactory.getActions(board, player.getIsBlack() ? 1 : 2) == null){
             gameWon = true;
             player.setWinner(true);
         }
     }
 
     private void makeMinMaxMove(TestPlayer player){
-        Action bestAction = MinMax.findBestAction(board, player.getDepth(), player.getIsBlack() ? 1 : 2, player.getHeuristicType());
+        long startTime = System.currentTimeMillis();
+        Action bestAction = MinMax.findBestAction(board, player.getDepth(), player.getIsBlack() ? 1 : 2, player.getHeuristicType(), startTime, player.getTimeLimit());
         board.updateBoardState(bestAction);
     }
 

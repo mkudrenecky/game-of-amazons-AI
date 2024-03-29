@@ -11,15 +11,23 @@ public class MinMax {
         this.bestAction = bestAction;
     }
 
-    public static Action findBestAction(Board board, int depth, int player, int heuristic) {
+    public static Action findBestAction(Board board, int depth, int player, int heuristic, long startTime, long timeLimit) {
         int alpha = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
         int maximizingPlayer = player;
+        int bestEvaluation = Integer.MIN_VALUE;
+        Action bestAction = null;
+        while (System.currentTimeMillis() - startTime < timeLimit) { // 30 seconds)
+            System.out.println("Depth: " + depth);
+            MinMax result = minMaxSearch(board, depth, alpha, beta, maximizingPlayer, player, heuristic);
 
-        MinMax result = minMaxSearch(board, depth, alpha, beta, maximizingPlayer, player, heuristic);
-
-        Action bestAction = result.bestAction;
-
+            if(result.evaluation > bestEvaluation){
+                bestAction = result.bestAction;
+                bestEvaluation = result.evaluation;
+            }
+            depth++;
+        
+        }
 
         return bestAction;
     }
