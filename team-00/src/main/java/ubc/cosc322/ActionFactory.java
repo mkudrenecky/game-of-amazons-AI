@@ -1,5 +1,6 @@
 package ubc.cosc322;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ActionFactory {
@@ -22,6 +23,7 @@ public class ActionFactory {
                 }
             }
         }
+        Collections.sort(actions, new sortByEval());
         return actions;
     }
 
