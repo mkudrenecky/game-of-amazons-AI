@@ -116,7 +116,7 @@ public class COSC322Test extends GamePlayer {
                 // if we are black, we make the first move
 				if (isBlack){
 					// System.out.print("Hello Black");
-				    makeMinMaxMove(1,1);
+				    makeDeepMinMaxMove();
                     // makeRandomMove();
 
                     // display the board after opening move
@@ -174,7 +174,8 @@ public class COSC322Test extends GamePlayer {
 
                 // make our move
 				// makeNegamaxMove();
-				makeMinMaxMove(1,1);
+				makeDeepMinMaxMove();
+				// makeDeepMinMaxMove();
                 // currently set up to play against white making random moves
 				// if (isBlack) {
 				// 	//makeRandomMove();
