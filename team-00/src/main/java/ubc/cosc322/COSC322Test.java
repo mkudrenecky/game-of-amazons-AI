@@ -45,14 +45,14 @@ public class COSC322Test extends GamePlayer {
 	public static void main(String[] args) {
 
 		GamePlayer player;
-        GamePlayer player2;
+        // GamePlayer player2;
 		testClass = new TestClass();
 		
 		// COSC322Test player = new COSC322Test(args[0], args[1]);
 
         // creates two players to have them play eachother, launches a GUI for each player
 		player = new COSC322Test("Team 14 :()", "1233");
-		player2 = new COSC322Test("sam", "456");
+		// player2 = new COSC322Test("sam", "456");
 
         // code for human player
 		// player2 = new HumanPlayer();
@@ -62,13 +62,13 @@ public class COSC322Test extends GamePlayer {
 
 		if (player.getGameGUI() == null) {
 			player.Go();
-			player2.Go();
+			// player2.Go();
 		} else {
 			BaseGameGUI.sys_setup();
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					player.Go();
-					player2.Go();
+					// player2.Go();
 				}
 			});
 		}
@@ -174,16 +174,16 @@ public class COSC322Test extends GamePlayer {
 
                 // make our move
 				// makeNegamaxMove();
-				// makeMinMaxMove(1,4);
+				makeMinMaxMove(1,1);
                 // currently set up to play against white making random moves
-				if (isBlack) {
-					//makeRandomMove();
-					makeMinMaxMove(1,1);
-				} else {
-					// makeRandomMove();
-					// makeMinMaxMove(1,1);
-					makeNegamaxMove();
-				}
+				// if (isBlack) {
+				// 	//makeRandomMove();
+				// 	makeMinMaxMove(1,1);
+				// } else {
+				// 	// makeRandomMove();
+				// 	// makeMinMaxMove(1,1);
+				// 	makeDeepMinMaxMove();
+				// }
                 //     // makeMinMaxMove(1,4);
 				// }
 
@@ -311,6 +311,52 @@ public class COSC322Test extends GamePlayer {
             System.out.println("No valid move found within the time limit.");
         }
     }
+
+	private void makeDeepMinMaxMove() {
+        // Initialize the best action with null
+        Action bestAction = null;
+    
+        // Start with a depth of 1
+        int depth = 1;
+        int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
+    
+        // Get the current time
+        long startTime = System.currentTimeMillis();
+        long timeLimit = 10000; // 30 seconds
+    
+        // Iterate until time limit is reached
+        while (System.currentTimeMillis() - startTime < timeLimit) { // 30 seconds
+    
+            // Perform Negamax search with the current depth
+            Action currentBestAction = DeepMinMax.findBestAction(board, depth, player, 1, startTime, timeLimit);
+            if (currentBestAction == null) {
+                System.out.println("We("+player+") are out of Negamax moves, we lost!! :( :( :( ");
+                // System.exit(0);
+            }
+    
+            // Update the best action found so far
+			if(depth == 1){
+            	bestAction = currentBestAction;
+			}
+			else if (depth > 1 && currentBestAction.value > bestAction.value){
+            	bestAction = currentBestAction;
+			}
+    
+            // Increment the depth for the next iteration
+            depth++;
+        }
+    
+        // Send the best action found so far
+        if (bestAction != null) {
+            // System.out.println("making negamax move for black? " + isBlack);
+            getGameClient().sendMoveMessage(bestAction.toServerResponse());
+            getGameGUI().updateGameState(bestAction.toServerResponse());
+            board.updateBoardState(bestAction);
+        } else {
+            System.out.println("No valid move found within the time limit.");
+        }
+    }
+
 
 	@Override
 	public String userName() {
