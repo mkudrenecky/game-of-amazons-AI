@@ -13,34 +13,69 @@ public class Board {
 
     public int[][] board;
 
+
+    public Board(){
+        this.board = new int[][]{
+            { 0, 0, 0, WHITE_QUEEN, 0, 0, WHITE_QUEEN, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0,	0 },
+                    { WHITE_QUEEN, 0, 0, 0, 0, 0, 0, 0, 0, WHITE_QUEEN },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0,	0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0,	0 },
+                    { BLACK_QUEEN, 0, 0, 0, 0, 0, 0, 0, 0, BLACK_QUEEN },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0,	0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0,	0 },
+                    { 0, 0, 0, BLACK_QUEEN, 0, 0, BLACK_QUEEN, 0, 0, 0 } };
+    }
+
     public Board(ArrayList<Integer> gameState){
         this.board =  new int[BOARD_SIZE][BOARD_SIZE];
         int index=12;
         for (int i = 0; i < BOARD_SIZE; i++){
             for (int j = 0; j < BOARD_SIZE; j++){
                 int value = gameState.get(index++);
-                board[i][j] = value;
+                this.board[i][j] = value;
             }
             index++;
         }
 
     }
 
-    public void updateBoardState(Action action, Board board){
+    public Board(Board oldBoard) {
+        this.board = new int[BOARD_SIZE][BOARD_SIZE];
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                this.board[i][j] = oldBoard.getPieceAt(i, j);
+            }
+        }
+    }
+
+    public Board(Board oldBoard, Action action){
+        this.board = new int[BOARD_SIZE][BOARD_SIZE];
+        Board newBoard = new Board(oldBoard);
+        newBoard.updateBoardState(action);
+        for (int i = 0; i < BOARD_SIZE; i++){
+            for (int j = 0; j < BOARD_SIZE; j++){
+                this.board[i][j] = newBoard.getPieceAt(i, j);
+            }
+        }
+    }
+
+    public void updateBoardState(Action action){
         QueenMove move = action.getQueenMove();
         ArrowShot arrow = action.getArrowShot();
 
         // get the color/player that made the move
-        int player = board.getPieceAt(move.getStartRow(),move.getStartCol());
-        System.out.println("PLayer moving: " + player);
+        int player = this.getPieceAt(move.getStartRow(),move.getStartCol());
+        // System.out.println("PLayer moving: " + player);
         
         // update board to 0 where queen was and move queen
-        board.setPieceAt(move.getStartRow(), move.getStartCol(), 0);
-        board.setPieceAt(move.getEndRow(), move.getEndCol(), player);
+        this.setPieceAt(move.getStartRow(), move.getStartCol(), 0);
+        this.setPieceAt(move.getEndRow(), move.getEndCol(), player);
       
 
         // update arrow on board
-        board.setPieceAt(arrow.getEndRow(), arrow.getEndCol(), ARROW);
+        this.setPieceAt(arrow.getEndRow(), arrow.getEndCol(), ARROW);
 
     }
 
@@ -65,6 +100,10 @@ public class Board {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    public boolean isGameOver(){
+       return true;
     }
     
 }

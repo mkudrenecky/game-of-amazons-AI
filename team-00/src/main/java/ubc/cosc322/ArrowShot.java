@@ -3,6 +3,7 @@ package ubc.cosc322;
 public class ArrowShot {
     private int startRow, startCol, endRow, endCol;
 
+    public ArrowShot(){}
     public ArrowShot(int startRow, int startCol, int endRow, int endCol){
         this.startRow = startRow;
         this.startCol = startCol;
@@ -24,5 +25,24 @@ public class ArrowShot {
 
     public int getEndCol() {
         return endCol;
+    }
+
+    public void setStartCol(int x){
+        this.startCol = x;
+    }
+
+    public void setEndCol(int x){
+        this.endCol = x;
+    }
+
+    public void setStartRow(int x){
+        this.startRow = x;
+    }
+
+    public void setEndRow(int x){
+        this.endRow = x;
+    }
+    public boolean equals(ArrowShot arrowShot){
+        return (this.getEndCol() == arrowShot.getEndCol() && this.getEndRow() == arrowShot.getEndRow() && this.getStartCol() == arrowShot.getStartCol() && this.getStartRow() == arrowShot.getStartRow());
     }
 }
