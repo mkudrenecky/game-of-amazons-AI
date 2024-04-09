@@ -51,7 +51,7 @@ public class COSC322Test extends GamePlayer {
 		// COSC322Test player = new COSC322Test(args[0], args[1]);
 
         // creates two players to have them play eachother, launches a GUI for each player
-		player = new COSC322Test("Team 14 :()", "1233");
+		player = new COSC322Test("Team 14 >:()", "1233");
 		// player2 = new COSC322Test("sam", "456");
 
         // code for human player
@@ -115,10 +115,7 @@ public class COSC322Test extends GamePlayer {
 
                 // if we are black, we make the first move
 				if (isBlack){
-					// System.out.print("Hello Black");
 				    makeDeepMinMaxMove();
-                    // makeRandomMove();
-
                     // display the board after opening move
                     System.out.println("BOARD AFTER OPENING BLACK MOVE:");
 				    System.out.println(board.boardToString());
@@ -127,8 +124,7 @@ public class COSC322Test extends GamePlayer {
 				break;
 			case GameMessage.GAME_STATE_BOARD:
                 // this is the opening state of the game of the game
-				// System.out.println("Message Details: " + msgDetails);
-                
+				                
                 // set the gui to the starting state
 				getGameGUI().setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
 
@@ -160,7 +156,6 @@ public class COSC322Test extends GamePlayer {
 
                	// test the opponent move against the validator
                 Action opponentAction = testClass.findMove(oldBoard, board);
-				// System.out.println("Opponent move legal? " + testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard));
 
                 // shut down the game if opponent makes an illegal move
 				if (!testClass.checkIfMoveValid(opponentAction, getOpponent(player), oldBoard)){
@@ -173,20 +168,7 @@ public class COSC322Test extends GamePlayer {
 				getGameGUI().updateGameState(msgDetails);
 
                 // make our move
-				// makeNegamaxMove();
 				makeDeepMinMaxMove();
-				// makeDeepMinMaxMove();
-                // currently set up to play against white making random moves
-				// if (isBlack) {
-				// 	//makeRandomMove();
-				// 	makeMinMaxMove(1,1);
-				// } else {
-				// 	// makeRandomMove();
-				// 	// makeMinMaxMove(1,1);
-				// 	makeDeepMinMaxMove();
-				// }
-                //     // makeMinMaxMove(1,4);
-				// }
 
 				// Additional visualization to ensure board is as expected
                 System.out.println("BOARD AFTER MOVE:");
@@ -209,6 +191,7 @@ public class COSC322Test extends GamePlayer {
 		return  (player == 1 ? 2 : 1);
 	}
 
+	// function to make random move, testing the server functionality and action factory
 	private void makeRandomMove() {
 		System.out.println("making move for black? " + isBlack);
 		ArrayList<Action> actions = ActionFactory.getActions(board, isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN);
@@ -217,49 +200,26 @@ public class COSC322Test extends GamePlayer {
             // System.exit(0);
         }
 
-		System.out.println("WE made the actions");
 		Action move = actions.get((int) (Math.random() * actions.size()));
 
-		System.out.println("About to send random move");
 		getGameClient().sendMoveMessage(move.toServerResponse());
 		getGameGUI().updateGameState(move.toServerResponse());
 
 		board.updateBoardState(move);
 	}
 
+	// function to make minMaxMove with predetermined depth and heuristic
 	private void makeMinMaxMove(int depth, int heuristic) {
         // Initialize the best action with null
         Action bestAction = null;
     
-        // Start with a depth of 1
-        // int depth = 1;
         int player = isBlack ? Board.BLACK_QUEEN : Board.WHITE_QUEEN;
     
-        // Get the current time
-        // long startTime = System.currentTimeMillis();
-        // long timeLimit = 28000; // 30 seconds
 		bestAction = MinMax.findBestAction(board, depth, player, heuristic);
     
-        // Iterate until time limit is reached
-        // while (System.currentTimeMillis() - startTime < timeLimit) { // 30 seconds
-    
-        //     // Perform Minimax search with the current depth
-        //     Action currentBestAction = MinMax.findBestAction(board, depth, player, 1);
-        //     if (currentBestAction == null) {
-        //         System.out.println("We("+player+") are out of MinMax moves, we lost!! :( :( :( ");
-        //         // System.exit(0);
-        //     }
-    
-        //     // Update the best action found so far
-        //     bestAction = currentBestAction;
-    
-        //     // Increment the depth for the next iteration
-        //     depth++;
-        // }
     
         // Send the best action found so far
         if (bestAction != null) {
-            System.out.println("making min max move for black? " + isBlack);
             getGameClient().sendMoveMessage(bestAction.toServerResponse());
             getGameGUI().updateGameState(bestAction.toServerResponse());
             board.updateBoardState(bestAction);
@@ -268,6 +228,7 @@ public class COSC322Test extends GamePlayer {
         }
     }
     
+	// method to make Nega Max move, set up for iterative deepening
     private void makeNegamaxMove() {
         // Initialize the best action with null
         Action bestAction = null;
@@ -304,7 +265,6 @@ public class COSC322Test extends GamePlayer {
     
         // Send the best action found so far
         if (bestAction != null) {
-            // System.out.println("making negamax move for black? " + isBlack);
             getGameClient().sendMoveMessage(bestAction.toServerResponse());
             getGameGUI().updateGameState(bestAction.toServerResponse());
             board.updateBoardState(bestAction);
@@ -313,6 +273,7 @@ public class COSC322Test extends GamePlayer {
         }
     }
 
+	// method to make iterative deepening minmax move, heursitc is hardcoded into this method
 	private void makeDeepMinMaxMove() {
         // Initialize the best action with null
         Action bestAction = null;
@@ -323,15 +284,14 @@ public class COSC322Test extends GamePlayer {
     
         // Get the current time
         long startTime = System.currentTimeMillis();
-        long timeLimit = 10000; // 30 seconds
+        long timeLimit = 10000; // time can be adjusted here, max 29s 
     
         // Iterate until time limit is reached
-        while (System.currentTimeMillis() - startTime < timeLimit) { // 30 seconds
-    
+        while (System.currentTimeMillis() - startTime < timeLimit) { 
             // Perform Negamax search with the current depth
             Action currentBestAction = DeepMinMax.findBestAction(board, depth, player, 1, startTime, timeLimit);
             if (currentBestAction == null) {
-                System.out.println("We("+player+") are out of Negamax moves, we lost!! :( :( :( ");
+                System.out.println("We("+player+") are out of DeepMinMax moves, we lost!! :( :( :( ");
                 // System.exit(0);
             }
     
@@ -349,7 +309,6 @@ public class COSC322Test extends GamePlayer {
     
         // Send the best action found so far
         if (bestAction != null) {
-            // System.out.println("making negamax move for black? " + isBlack);
             getGameClient().sendMoveMessage(bestAction.toServerResponse());
             getGameGUI().updateGameState(bestAction.toServerResponse());
             board.updateBoardState(bestAction);
